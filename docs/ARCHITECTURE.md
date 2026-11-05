@@ -74,12 +74,31 @@ de frontend, backend ou base de données n’est créé à ce stade.
 - Prévoir un environnement de validation et une récupération adaptée avant toute
   livraison en production ; ne rien provisionner pendant ce cadrage.
 
+## Premier produit : portail privé ALTER EGO
+
+Le besoin confirmé est un point d’entrée personnel regroupant les applications
+du propriétaire, sans accès client. Voir [PRODUCT.md](PRODUCT.md) pour le périmètre
+proposé et les critères d’acceptation.
+
+Architecture cible proposée : une application web responsive unique, un accès
+authentifié réservé à une identité autorisée et un stockage persistant des fiches.
+Les autorisations protègent les pages et les opérations côté serveur. Aucun
+microservice n’est nécessaire pour ce périmètre.
+
+Le catalogue conserve des métadonnées et des liens HTTPS vers des applications
+indépendantes. Il ne centralise ni leurs données métier ni leurs secrets.
+Chaque application conserve ses accès et son déploiement. Un lien ne crée pas
+de connexion unique. Les URL enregistrées ne contiennent aucun jeton.
+
+Framework, authentification, stockage et hébergement restent à choisir après
+validation du périmètre. Cette architecture n’est pas encore implémentée.
+
 ## Choix encore ouverts
 
 | Sujet | État | Éléments nécessaires pour décider |
 | --- | --- | --- |
 | Dépôt et branche de référence | Identifiés | `jajay122/alter-ego-dev`, `main` ; README uniquement au commit examiné. |
-| Premier produit | Non défini | Utilisateurs, problème, parcours et critères d’acceptation. |
+| Premier produit | Besoin confirmé, périmètre proposé | Portail privé ; critères dans PRODUCT.md à valider. |
 | Web responsive, PWA ou mobile natif | À étudier | Installation, hors-ligne, notifications, matériel et distribution. |
 | Langages et frameworks | Non choisis | Existant, besoins, compétences, maintenance et tests. |
 | API, stockage et authentification | Selon besoin | Données, permissions, contraintes et intégrations. |
