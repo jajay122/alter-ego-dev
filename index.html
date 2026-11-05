@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>ALTER EGO — Vie parallèle</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,sans-serif;color:#e5e7eb;background:#0b1020}
+    *{box-sizing:border-box}body{margin:0;line-height:1.5}main{max-width:1000px;margin:auto;padding:24px 16px 60px}
+    header{margin-bottom:24px}h1{font-size:clamp(2rem,6vw,3.2rem);margin:0}h2{font-size:1.15rem;margin-top:0}
+    .muted{color:#a5b4c8}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+    .card{background:#172036;border:1px solid #34405b;border-radius:14px;padding:18px;margin-bottom:16px}
+    label{display:block;margin:12px 0 4px;font-weight:600}input{width:100%;padding:10px;border:1px solid #60708b;border-radius:8px;background:#0b1020;color:#fff;font:inherit}
+    button{padding:11px 14px;border:0;border-radius:9px;background:#9dd6ff;color:#08111f;font:inherit;font-weight:700;cursor:pointer}
+    button.secondary{background:#334155;color:#fff}button:focus-visible,input:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.person{border-top:1px solid #34405b;padding:12px 0}.person:first-of-type{border:0}
+    .person strong{display:block}ul{padding-left:22px}li{margin-bottom:8px}#log{max-height:350px;overflow:auto}
+    .pill{display:inline-block;background:#334155;padding:3px 8px;border-radius:20px;font-size:.85rem}
+  </style>
+</head>
+<body>
+<main>
+  <header><p class="muted">ALTER EGO DEV · Prototype local v0.1</p><h1>Vie parallèle</h1><p class="muted">Observe un petit monde virtuel. Les comportements sont simulés par des règles simples, sans intelligence autonome.</p></header>
+  <div class="grid">
+    <section class="card" aria-labelledby="profile-title"><h2 id="profile-title">Ton double numérique</h2>
+      <label for="name">Nom de l'avatar</label><input id="name" maxlength="40" autocomplete="off">
+      <label for="trait">Trait dominant</label><input id="trait" maxlength="80" autocomplete="off">
+      <label for="goal">Objectif</label><input id="goal" maxlength="120" autocomplete="off">
+      <div class="actions"><button id="save">Enregistrer le profil</button></div><p id="save-status" class="muted" role="status"></p>
+    </section>
+    <section class="card" aria-labelledby="world-title"><h2 id="world-title">Monde virtuel</h2>
+      <p>Heure simulée : <strong id="clock"></strong></p><p>Cycle : <strong id="cycle"></strong></p>
+      <p class="muted">Lieux : maison, bibliothèque, café, parc.</p>
+      <div class="actions"><button id="tick">Faire avancer 1 heure</button><button id="reset" class="secondary">Réinitialiser</button></div>
+    </section>
+  </div>
+  <div class="grid">
+    <section class="card" aria-labelledby="people-title"><h2 id="people-title">Habitants</h2><div id="people"></div></section>
+    <section class="card" aria-labelledby="log-title"><h2 id="log-title">Journal des événements</h2><ul id="log" aria-live="polite"></ul></section>
+  </div>
+</main>
+<script>
+(() => {
+  "use strict";
+  const KEY="alter-ego-v01";
+  const places=["maison","bibliothèque","café","parc"];
+  const defaults=()=>({
+    version:1,hour:8,cycle:0,
+    avatar:{name:"Mon alter ego",trait:"Curieux",goal:"Découvrir ce monde"},
+    people:[
+      {name:"Camille",goal:"Apprendre",place:"bibliothèque",memory:[]},
+      {name:"Alex",goal:"Rencontrer des gens",place:"café",memory:[]},
+      {name:"Morgan",goal:"Explorer",place:"parc",memory:[]}
+    ],events:["08:00 — Le monde virtuel s'éveille."]
+  });
+  const $=id=>document.getElementById(id);
+  const valid=s=>s&&s.version===1&&Number.isInteger(s.hour)&&Number.isInteger(s.cycle)&&s.avatar&&Array.isArray(s.people)&&Array.isArray(s.events);
+  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));return valid(s)?s:defaults()}catch{return defaults()}}
+  let state=load();
+  function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch{return false}}
+  const clean=(value,max)=>String(value||"").trim().slice(0,max);
+  function render(){
+    $("clock").textContent=String(state.hour).padStart(2,"0")+":00";
+    $("cycle").textContent=String(state.cycle);
+    $("people").replaceChildren();
+    for(const p of state.people){
+      const el=document.createElement("div");el.className="person";
+      const name=document.createElement("strong");name.textContent=p.name;
+      const info=document.createElement("span");info.textContent="Objectif : "+p.goal+" · Lieu : "+p.place;
+      const mem=document.createElement("p");mem.className="muted";mem.textContent="Souvenir : "+(p.memory.at(-1)||"Aucun pour l'instant");
+      el.append(name,info,mem);$("people").append(el);
+    }
+    $("log").replaceChildren();
+    for(const entry of state.events.slice(-30).reverse()){
+      const li=document.createElement("li");li.textContent=entry;$("log").append(li);
+    }
+  }
+  function profile(){ $("name").value=state.avatar.name;$("trait").value=state.avatar.trait;$("goal").value=state.avatar.goal }
+  $("save").addEventListener("click",()=>{
+    const name=clean($("name").value,40),trait=clean($("trait").value,80),goal=clean($("goal").value,120);
+    if(!name||!trait||!goal){$("save-status").textContent="Renseigne les trois champs.";return}
+    state.avatar={name,trait,goal};
+    $("save-status").textContent=persist()?"Profil enregistré sur cet appareil.":"Profil modifié, mais stockage local indisponible.";
+  });
+  $("tick").addEventListener("click",()=>{
+    state.hour=(state.hour+1)%24;state.cycle++;
+    const time=String(state.hour).padStart(2,"0")+":00";
+    const p=state.people[(state.cycle-1)%state.people.length];
+    p.place=places[(state.cycle+p.name.length)%places.length];
+    const other=state.people.find(x=>x!==p&&x.place===p.place);
+    const event=other? p.name+" échange avec "+other.name+" au "+p.place : p.name+" se rend au "+p.place+" pour poursuivre son objectif : "+p.goal;
+    p.memory.push(event);p.memory=p.memory.slice(-5);
+    if(other){other.memory.push(event);other.memory=other.memory.slice(-5)}
+    state.events.push(time+" — "+event);state.events=state.events.slice(-100);
+    persist();render();
+  });
+  $("reset").addEventListener("click",()=>{
+    if(!confirm("Effacer le profil et tous les événements enregistrés sur cet appareil ?"))return;
+    state=defaults();try{localStorage.removeItem(KEY)}catch{}
+    profile();$("save-status").textContent="Simulation réinitialisée.";render();
+  });
+  profile();render();
+})();
+</script>
+</body>
+</html>
