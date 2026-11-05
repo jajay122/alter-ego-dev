@@ -88,6 +88,25 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** tarifs et limites officiels vérifiés, liens dans
   [HOSTING.md](HOSTING.md). Aucun compte, service ou déploiement créé.
 
+## ADR-007 — Vie parallèle, première application à modèles gratuits
+
+- **Date :** 2026-11-05.
+- **Statut :** première application et recours aux modèles gratuits confirmés ;
+  plan de réalisation proposé.
+- **Contexte :** le propriétaire souhaite une simulation de vie inspirée de
+  Smallville, accessible depuis son portail privé.
+- **Décision :** conserver le portail comme catalogue ; Vie parallèle gère son
+  monde, ses personnages et ses sauvegardes. Prévoir des interactions génératives
+  avec un modèle éligible au niveau gratuit.
+- **Alternatives :** remplacer le portail par la simulation, non retenu ;
+  limiter les dialogues à des scripts, incompatible avec le choix génératif confirmé.
+- **Conséquences :** quotas et éligibilité à vérifier, pause en cas d’épuisement,
+  aucun recours payant automatique, aucune exécution permanente au démarrage.
+  Commencer par un parcours à un personnage puis étendre à trois est proposé.
+- **Livrables :** [spécification](apps/VIE_PARALLELE.md) et
+  [plan avec écrans](apps/VIE_PARALLELE_PLAN.md).
+- **Validation :** aucun code ni service lancé ; aucun test de génération effectué.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
