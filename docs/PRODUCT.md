@@ -60,8 +60,9 @@ application Android native et connexion unique entre applications sont hors pér
 ## Choix encore ouverts
 
 Méthode de connexion du propriétaire, premières applications à référencer,
-budget mensuel, stack et hébergement restent à définir. Aucun service payant
-n’est provisionné par ce cadrage.
+stack et hébergement restent à définir. Le propriétaire confirme un budget de
+0 € pour le démarrage. Voir [HOSTING.md](HOSTING.md) pour la piste gratuite et ses
+limites. Aucun service payant n’est provisionné par ce cadrage.
 
 ## Références
 
