@@ -71,6 +71,23 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Validation :** usage personnel confirmé dans la conversation ; fonctionnalités
   de [PRODUCT.md](PRODUCT.md) à valider avant développement.
 
+## ADR-006 — Démarrer sans frais d’hébergement
+
+- **Date :** 2026-11-05.
+- **Statut :** budget gratuit confirmé par le propriétaire ; fournisseurs proposés.
+- **Contexte :** portail privé à faible trafic, sans budget d’hébergement initial.
+- **Décision :** viser 0 € en restant sur des offres gratuites, sans essai payant,
+  domaine acheté, option facturable ni montée de gamme automatique.
+- **Piste :** Vercel Hobby pour le site et Supabase Free pour Auth et PostgreSQL,
+  sous réserve de l’éligibilité à l’usage personnel non commercial de Hobby.
+- **Alternatives :** offres payantes exclues au démarrage ; autre hébergeur gratuit
+  à étudier si l’usage du portail est commercial, même avec un utilisateur unique.
+- **Conséquences :** quotas et interruptions possibles ; Supabase peut mettre en
+  pause après une semaine d’inactivité et n’inclut pas de sauvegardes automatiques
+  sur Free. Prévoir une procédure d’export et restauration avant usage réel.
+- **Preuves :** tarifs et limites officiels vérifiés, liens dans
+  [HOSTING.md](HOSTING.md). Aucun compte, service ou déploiement créé.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
