@@ -90,8 +90,11 @@ indépendantes. Il ne centralise ni leurs données métier ni leurs secrets.
 Chaque application conserve ses accès et son déploiement. Un lien ne crée pas
 de connexion unique. Les URL enregistrées ne contiennent aucun jeton.
 
-Framework, authentification, stockage et hébergement restent à choisir après
-validation du périmètre. Cette architecture n’est pas encore implémentée.
+La stack retenue pour le premier parcours est documentée dans [TECH_STACK.md](TECH_STACK.md) :
+Next.js avec TypeScript, Supabase et appels serveur directs à Gemini gratuit.
+Le portail et la simulation restent des domaines séparés dans une application web
+unique au démarrage. Leurs données et permissions sont distinctes. Les projets,
+comptes et quotas restent à configurer ; cette architecture n’est pas implémentée.
 
 ## Choix encore ouverts
 
@@ -100,8 +103,8 @@ validation du périmètre. Cette architecture n’est pas encore implémentée.
 | Dépôt et branche de référence | Identifiés | `jajay122/alter-ego-dev`, `main` ; README uniquement au commit examiné. |
 | Premier produit | Besoin confirmé, périmètre proposé | Portail privé ; critères dans PRODUCT.md à valider. |
 | Web responsive, PWA ou mobile natif | À étudier | Installation, hors-ligne, notifications, matériel et distribution. |
-| Langages et frameworks | Non choisis | Existant, besoins, compétences, maintenance et tests. |
-| API, stockage et authentification | Selon besoin | Données, permissions, contraintes et intégrations. |
+| Langages et frameworks | Retenus pour le premier parcours | Next.js App Router et TypeScript ; versions à verrouiller lors de l’installation. |
+| API, stockage et authentification | Choix documentés | Routes serveur, Supabase Auth et PostgreSQL ; projet dédié et identité propriétaire à configurer. |
 | CI et hébergement | Non configurés par ce cadrage | Outillage existant, budget, accès et validation de production. |
 
 Tout choix structurant sera enregistré dans [DECISIONS.md](DECISIONS.md).

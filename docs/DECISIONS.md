@@ -107,6 +107,27 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
   [plan avec écrans](apps/VIE_PARALLELE_PLAN.md).
 - **Validation :** aucun code ni service lancé ; aucun test de génération effectué.
 
+## ADR-008 — Une application web et des appels directs au modèle gratuit
+
+- **Date :** 2026-11-05.
+- **Statut :** choix d’architecture retenu pour préparer le premier parcours ;
+  configuration et mise en œuvre non réalisées.
+- **Contexte :** un propriétaire sur Android, un portail et une simulation,
+  budget gratuit, aucun besoin établi de déploiements indépendants.
+- **Décision :** Next.js App Router et TypeScript pour une application web unique ;
+  Supabase Auth et PostgreSQL pour l’identité et les sauvegardes ; appels serveur
+  directs à Gemini sur un modèle effectivement éligible Free Tier.
+- **Alternatives :** services séparés, plus complexes sans besoin actuel ;
+  application Android native, inutile pour ce premier parcours web ;
+  passerelle IA facturée, non retenue pour préserver le budget.
+- **Conséquences :** catalogue et simulation gardent des responsabilités et données
+  distinctes. Le modèle ne fournit pas les droits d’accès ni la validation métier.
+  Un projet Supabase dédié et les accès Gemini doivent être configurés ; aucun
+  projet existant n’est réutilisé automatiquement.
+- **Preuves et limites :** [TECH_STACK.md](TECH_STACK.md) consigne les lectures de
+  comptes, versions locales, configuration absente et sources officielles.
+  Aucun test applicatif ni appel de modèle effectué.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
