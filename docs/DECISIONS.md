@@ -54,6 +54,23 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Conséquences :** la CI et l’hébergement devront faire respecter cette exigence ;
   la documentation seule ne crée pas de protection effective.
 
+## ADR-005 — Regrouper les applications dans un portail personnel
+
+- **Date :** 2026-11-05.
+- **Statut :** usage privé confirmé par le propriétaire (« que pour moi ») ;
+  périmètre et architecture cible proposés pour revue.
+- **Contexte :** regrouper toutes les futures applications du propriétaire.
+- **Décision :** concevoir un portail privé avec catalogue et liens ; proposer une
+  interface web responsive administrable depuis Android.
+- **Alternatives :** plateforme commerciale avec clients et facturation, écartée
+  pour cette version compte tenu de l’usage confirmé ; fusionner les applications
+  dans un logiciel unique, inutile pour ce besoin de catalogue.
+- **Conséquences :** pas d’inscription publique ni paiement ; applications
+  indépendantes conservant leurs droits. Authentification du propriétaire et
+  autorisations côté serveur requises lors de la réalisation. Stack ouverte.
+- **Validation :** usage personnel confirmé dans la conversation ; fonctionnalités
+  de [PRODUCT.md](PRODUCT.md) à valider avant développement.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
