@@ -8,7 +8,8 @@ la création d’un petit assistant local, puis d’une première application de
 suivi de calories avec saisie manuelle et sauvegarde privée. Le suivi reste un
 module du portail ; catalogue nutritionnel, photo et recherche web font désormais
 l’objet d’une recherche et d’un plan de construction. Le premier connecteur
-Open Food Facts, son cache local et les portions sourcées sont implémentés.
+Open Food Facts, son cache local et les portions sourcées sont implémentés. La
+photo assistée propose un nom à vérifier, sans estimation calorique automatique.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement

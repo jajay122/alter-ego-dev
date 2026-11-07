@@ -41,3 +41,10 @@ ni un système de reconnaissance d’identité.
 - [Carte du modèle et licence](https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct)
 - [Support multimodal llama.cpp](https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md)
 - [API de recherche MediaWiki](https://www.mediawiki.org/wiki/API:Search)
+
+## Photo dans le suivi calories
+
+Le même moteur propose un nom d’aliment dans le journal. La photo est réduite
+à 512 pixels avant envoi, pour rester compatible avec le petit contexte. Aucun
+calcul nutritionnel n’est demandé au modèle. Les noms doivent être vérifiés et
+peuvent être corrigés avant la recherche du produit. Voir [FOOD_PHOTO.md](FOOD_PHOTO.md).

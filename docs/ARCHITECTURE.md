@@ -31,6 +31,7 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 | GET / | Portail des applications. | Aucun journal personnel dans le HTML. |
 | GET /calories | Interface de verrouillage du suivi. | Journal lu seulement après authentification. |
 | GET /assistant | Interface de l’assistant existant. | Session commune pour les opérations privées. |
+| POST /api/nutrition/photo | Propositions de noms par vision locale. | Session, origine, validation image, verrou et quota partagés avec l’assistant. |
 | GET /api/nutrition/search?q=... | Catalogue Open Food Facts et cache local. | Session obligatoire, entrée bornée, quotas persistants. |
 | GET /api/session | État de session sans appel au modèle. | Aucun contenu personnel. |
 | GET /api/calories/day et /api/calories/export | Lecture ou export du journal. | Session obligatoire. |
@@ -42,8 +43,9 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 | POST /api/logout | Révocation immédiate de la session. | Session et origine. |
 
 Les entrées et les réponses ne sont pas des instructions exécutables. Le texte
-est affiché par textContent. Les seuls liens externes générés par l’application
-sont construits à partir des identifiants d’articles retournés par Wikipédia.
+est affiché par textContent. Les liens de sources sont construits depuis les identifiants Wikipédia ou les
+codes produits OFF ; des liens fixes d’attribution complètent ces sources. Aucun
+lien n’est repris tel quel depuis la sortie du modèle.
 
 ## Installation et disponibilité
 
@@ -80,8 +82,8 @@ les sauvegardes du volume, sans constituer un système de restauration intégré
 Catalogue public/cache distinct du journal privé, fiches versionnées et sourcées,
 recherche par photo avec confirmation des portions, collecte web contrôlée :
 [plan proposé](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF et un cache SQLite avec index FTS5 sont désormais livrés,
-sans migration du journal. Voir [NUTRITION.md](NUTRITION.md). Ciqual, USDA,
-photo/OCR et collecte web générale restent proposés.
+sans migration du journal. Voir [NUTRITION.md](NUTRITION.md). La [photo assistée](FOOD_PHOTO.md) est aussi implémentée. Ciqual, USDA, OCR
+d’étiquette et collecte web générale restent proposés.
 
 ## Cache alimentaire
 
@@ -92,3 +94,10 @@ instantanés nutritionnels sont des champs optionnels du schéma 1 du journal :
 les anciennes entrées restent lisibles sans migration. Une ancienne version du
 serveur ne garantit pas la conservation de ces champs lors des corrections ;
 conserver code et sauvegarde correspondants pour un retour arrière.
+
+## Photo alimentaire
+
+public/food-photo.js gère le JPEG réduit, l’aperçu temporaire, l’annulation et les
+résultats corrigibles. lib/food-photo.mjs fournit la consigne serveur et le filtre
+de noms. L’endpoint réutilise askLocalModel et les protections de l’assistant.
+Aucune image ni proposition n’est ajoutée automatiquement au journal ou à OFF.
