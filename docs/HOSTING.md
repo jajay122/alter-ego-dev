@@ -1,56 +1,33 @@
-# Hébergement — Démarrage gratuit
+# Hébergement du petit assistant
 
-## Contrainte confirmée
+## Choix courant
 
-Budget initial : **0 € d’hébergement**. Le propriétaire a confirmé « Gratuite ».
-Ce choix ne garantit ni une disponibilité permanente ni le maintien des tarifs.
-Il concerne le portail, pas l’hébergement de toutes les applications référencées.
-L’abonnement ChatGPT existant est distinct de ce budget.
+Le modèle est installé avec le serveur du SaaS. Le téléphone affiche l’interface ;
+il ne recharge pas les poids pour chaque demande. Le serveur Node.js et le moteur
+llama.cpp doivent rester actifs sur une machine disposant de CPU, de mémoire et
+de disque. SmolVLM-256M et llama.cpp sont gratuits, sans appel d’IA facturé.
 
-## Piste proposée, non provisionnée
+Un hébergement gratuit de pages ou de fonctions à courte durée n’offre pas, à lui
+seul, un processus de modèle permanent. La piste Vercel et la base Supabase ne
+sont donc pas nécessaires pour ce prototype. Aucun projet existant n’a été modifié.
 
-| Élément | Proposition | Conditions |
-| --- | --- | --- |
-| Site web | Vercel Hobby | Gratuit ; usage personnel non commercial uniquement. |
-| Connexion et données | Supabase Free : Auth et PostgreSQL | Gratuit dans les quotas ; projet susceptible d’être mis en pause après une semaine d’inactivité. |
-| Adresse | Sous-domaine gratuit fourni par l’hébergeur | Aucun domaine personnalisé acheté. |
-| Connexion du propriétaire | Étudier GitHub OAuth via Supabase Auth | Aucun SMS ni service d’envoi d’emails payant prévu ; droits limités au propriétaire à concevoir. |
+## Modes fournis
 
-Un portail utilisé seul peut quand même servir une activité commerciale.
-L’éligibilité à Hobby doit donc être vérifiée avant de retenir cet hébergeur.
-Si les applications ou le portail servent une entreprise, réexaminer une offre
-gratuite autorisant cet usage, sans basculer vers un abonnement payant par défaut.
+- Machine locale : npm run model:install, npm run model:start et npm start.
+  Ports liés à 127.0.0.1 par défaut.
+- Serveur : compose.yaml maintient les processus avec restart unless-stopped,
+  sépare le réseau du modèle et prépare un port local pour un proxy HTTPS.
+  PUBLIC_ORIGIN doit correspondre exactement à l’URL publique HTTPS.
 
-## Limites observées le 5 novembre 2026
+Il reste à choisir et configurer une machine permanente. Aucun abonnement,
+domaine, machine de production ou tunnel public n’est créé par ce changement.
+Le budget de démarrage est 0 € ; ne pas présumer qu’une ressource permanente
+adaptée sera disponible gratuitement. Toute dépense demande un accord préalable.
 
-- Vercel Hobby : 100 Go de Fast Data Transfer inclus ; des dépassements peuvent
-  bloquer une fonctionnalité jusqu’à la remise à disposition du quota.
-- Supabase Free : 500 Mo de base de données, 5 Go de trafic sortant,
-  50 000 utilisateurs actifs mensuels inclus et deux projets actifs au maximum.
-  Ces plafonds ne dispensent pas de surveiller l’usage.
-- Supabase Free : pause après une semaine d’inactivité ; sauvegardes automatiques
-  et restauration à un instant donné non incluses. Prévoir export et restauration.
-- Ni la pause ni le dépassement ne doivent déclencher de passage payant automatique.
-  Afficher une erreur honnête, puis restaurer le service selon les règles du fournisseur.
-- Ne pas créer de trafic artificiel pour empêcher la mise en pause.
+## Conditions avant publication
 
-## Avant mise en service
-
-Vérifier l’éligibilité, les quotas en vigueur et les comptes accessibles.
-Configurer la connexion du seul propriétaire, les droits côté serveur et les
-politiques d’accès aux données. Prévoir une procédure de sauvegarde récupérable,
-garder les secrets hors Git et vérifier les parcours définis dans PRODUCT.md.
-
-Le lien entre GitHub et l’hébergement devra préserver l’approbation humaine
-explicite avant production. Le budget gratuit ne vaut pas autorisation de déployer.
-Aucun service, option payante ou déploiement n’est créé par ce document.
-
-## Sources officielles
-
-- [Vercel Hobby : gratuité, limites et usage personnel](https://vercel.com/docs/plans/hobby)
-- [Supabase : tarif et fonctionnalités Free](https://supabase.com/pricing)
-
-## Références
-
-- [Produit](PRODUCT.md)
-- [Décisions](DECISIONS.md)
+Mot de passe privé configuré hors Git, HTTPS, moteur non exposé publiquement,
+versions et empreintes vérifiées, contrôles d’accès et tâches réels testés,
+procédure d’arrêt disponible et approbation humaine de la version et de la cible.
+Un redémarrage de l’application révoque les sessions. Aucun historique utilisateur
+n’est stocké sur disque dans cette version.

@@ -6,7 +6,7 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 ## ADR-001 — Limiter la phase actuelle au cadrage
 
 - **Date :** 2026-11-05.
-- **Statut :** demandé par le propriétaire ; cadrage préparé sur branche dédiée pour revue.
+- **Statut :** cadrage initial terminé ; la création du nouvel assistant est autorisée le 2026-11-07.
 - **Contexte :** organiser la création future d’applications web et mobiles depuis Android.
 - **Décision :** créer les consignes des dix rôles et les documents d’architecture,
   roadmap et décisions. Ne construire aucune application pendant cette phase.
@@ -78,8 +78,8 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Contexte :** portail privé à faible trafic, sans budget d’hébergement initial.
 - **Décision :** viser 0 € en restant sur des offres gratuites, sans essai payant,
   domaine acheté, option facturable ni montée de gamme automatique.
-- **Piste :** Vercel Hobby pour le site et Supabase Free pour Auth et PostgreSQL,
-  sous réserve de l’éligibilité à l’usage personnel non commercial de Hobby.
+- **Piste initiale :** Vercel Hobby et Supabase ; non retenue pour le moteur
+  installé en permanence. Voir [HOSTING.md](HOSTING.md) pour le choix actuel.
 - **Alternatives :** offres payantes exclues au démarrage ; autre hébergeur gratuit
   à étudier si l’usage du portail est commercial, même avec un utilisateur unique.
 - **Conséquences :** quotas et interruptions possibles ; Supabase peut mettre en
@@ -88,24 +88,21 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** tarifs et limites officiels vérifiés, liens dans
   [HOSTING.md](HOSTING.md). Aucun compte, service ou déploiement créé.
 
-## ADR-007 — Vie parallèle, première application à modèles gratuits
+## ADR-007 — Installer un petit assistant multimodal autonome
 
-- **Date :** 2026-11-05.
-- **Statut :** première application et recours aux modèles gratuits confirmés ;
-  plan de réalisation proposé.
-- **Contexte :** le propriétaire souhaite une simulation de vie inspirée de
-  Smallville, accessible depuis son portail privé.
-- **Décision :** conserver le portail comme catalogue ; Vie parallèle gère son
-  monde, ses personnages et ses sauvegardes. Prévoir des interactions génératives
-  avec un modèle éligible au niveau gratuit.
-- **Alternatives :** remplacer le portail par la simulation, non retenu ;
-  limiter les dialogues à des scripts, incompatible avec le choix génératif confirmé.
-- **Conséquences :** quotas et éligibilité à vérifier, pause en cas d’épuisement,
-  aucun recours payant automatique, aucune exécution permanente au démarrage.
-  Commencer par un parcours à un personnage puis étendre à trois est proposé.
-- **Livrables :** [spécification](apps/VIE_PARALLELE.md) et
-  [plan avec écrans](apps/VIE_PARALLELE_PLAN.md).
-- **Validation :** aucun code ni service lancé ; aucun test de génération effectué.
+- **Date :** 2026-11-07.
+- **Statut :** demande de création et choix du serveur autorisés par le propriétaire.
+- **Décision :** remplacer le premier projet par un petit assistant texte et image,
+  installé côté serveur avec SmolVLM-256M et llama.cpp. Aucune API d’IA distante.
+- **Alternatives :** une API externe, écartée selon la préférence du propriétaire ;
+  exécution dans le navigateur Android, moins adaptée à une disponibilité stable.
+- **Conséquences :** poids stockés localement, moteur réutilisable tant que la machine
+  fonctionne, fonctions limitées et français imparfait. La recherche Internet
+  nécessite une connexion et commence par des sources Wikipédia explicites.
+- **Budget :** logiciel et poids gratuits ; l’existence d’un serveur permanent
+  gratuit n’est pas garantie. Aucun service payant ni production déployé.
+- **Livrables :** code du prototype, installation vérifiée par SHA-256, tests,
+  [architecture](ARCHITECTURE.md) et [documentation du modèle](LOCAL_MODEL.md).
 
 ## Modèle pour les prochaines décisions
 
