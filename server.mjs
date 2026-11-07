@@ -3,9 +3,14 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assistant.mjs';
+import { createCalorieStore } from './lib/calories.mjs';
 
 const staticFiles = new Map([
-  ['/', ['index.html', 'text/html; charset=utf-8']],
+  ['/', ['calories.html', 'text/html; charset=utf-8']],
+  ['/calories', ['calories.html', 'text/html; charset=utf-8']],
+  ['/assistant', ['index.html', 'text/html; charset=utf-8']],
+  ['/calories.js', ['calories.js', 'text/javascript; charset=utf-8']],
+  ['/calories.css', ['calories.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
   ['/icon.svg', ['icon.svg', 'image/svg+xml']],
@@ -20,6 +25,7 @@ export function readConfig(env = process.env) {
     origin: env.PUBLIC_ORIGIN || '',
     host: env.HOST || '127.0.0.1',
     port: Number(env.PORT || 3000),
+    dataDir: env.CALORIES_DATA_DIR || fileURLToPath(new URL('./.data/', import.meta.url)),
   };
 }
 
@@ -46,6 +52,7 @@ function readJson(req, maxBytes) {
 }
 
 export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
+  const calorieStore = createCalorieStore(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
   const sessions = new Map();
   const loginAttempts = new Map();
   const calls = [];
@@ -68,7 +75,8 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       res.end(JSON.stringify(value));
     };
     try {
-      const path = new URL(req.url, 'http://local.invalid').pathname;
+      const url = new URL(req.url, 'http://local.invalid');
+      const path = url.pathname;
       const now = Date.now();
       for (const [key, value] of sessions) if (value.expires < now) sessions.delete(key);
       for (const [key, value] of loginAttempts) if (value.reset < now) loginAttempts.delete(key);
@@ -85,7 +93,22 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         return json(200, { authenticated: Boolean(session), passwordConfigured: config.password.length >= 12,
           modelReady: session ? await modelHealth(config, fetchImpl) : null, model: config.model });
       }
-      if (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist'].includes(path)) {
+      if (req.method === 'GET' && path === '/api/session') {
+        return json(200, { authenticated: Boolean(session), passwordConfigured: config.password.length >= 12 });
+      }
+      if (req.method === 'GET' && ['/api/calories/day', '/api/calories/export'].includes(path)) {
+        if (!session) throw new AppError(401, 'UNAUTHORIZED', 'Connecte-toi pour accéder à ton journal.');
+        if (path === '/api/calories/export') {
+          res.setHeader('Content-Disposition', 'attachment; filename="alter-ego-calories.json"');
+          return json(200, await calorieStore.snapshot());
+        }
+        return json(200, await calorieStore.day(url.searchParams.get('date')));
+      }
+      const entryPath = /^\/api\/calories\/entries\/([a-f0-9-]{36})$/i.exec(path);
+      const calorieMutation = (path === '/api/calories/entries' && req.method === 'POST')
+        || (path === '/api/calories/goal' && req.method === 'PUT')
+        || (entryPath && ['PUT', 'DELETE'].includes(req.method));
+      if (!calorieMutation && (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist'].includes(path))) {
         throw new AppError(404, 'NOT_FOUND', 'Cette page n’existe pas.');
       }
       const origin = config.origin || `http://${req.headers.host}`;
@@ -112,11 +135,19 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         res.setHeader('Set-Cookie', sessionCookie(id, sessionLifetime / 1000));
         return json(200, { authenticated: true });
       }
-      if (!session) throw new AppError(401, 'UNAUTHORIZED', 'Connecte-toi pour utiliser ton assistant.');
+      if (!session) throw new AppError(401, 'UNAUTHORIZED', 'Connecte-toi pour accéder à ton espace.');
       if (path === '/api/logout') {
         sessions.delete(token);
         res.setHeader('Set-Cookie', sessionCookie('', 0));
         return json(200, { authenticated: false });
+      }
+      if (calorieMutation) {
+        const body = await readJson(req, 4096);
+        if (!body || typeof body !== 'object' || Array.isArray(body)) throw new AppError(400, 'INVALID_ENTRY', 'Le format de cette entrée est invalide.');
+        if (path === '/api/calories/entries') return json(201, await calorieStore.add(body));
+        if (path === '/api/calories/goal') return json(200, await calorieStore.setGoal(body.goal));
+        if (req.method === 'PUT') return json(200, await calorieStore.update(entryPath[1], body));
+        return json(200, await calorieStore.remove(entryPath[1], body.version));
       }
       if (busy) throw new AppError(429, 'BUSY', 'Une tâche est déjà en cours. Attends sa fin.');
       const input = validateInput(await readJson(req, 4_300_000));

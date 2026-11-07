@@ -6,3 +6,5 @@ node_modules
 artifacts
 test
 docs
+.data/*
+!.data/.gitkeep

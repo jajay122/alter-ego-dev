@@ -104,6 +104,21 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Livrables :** code du prototype, installation vérifiée par SHA-256, tests,
   [architecture](ARCHITECTURE.md) et [documentation du modèle](LOCAL_MODEL.md).
 
+## ADR-008 — Commencer par un journal privé de calories indépendant de l’IA
+
+- **Date :** 2026-11-07.
+- **Statut :** création demandée par le propriétaire ; prototype implémenté.
+- **Décision :** placer le suivi à l’accueil, conserver l’assistant sur /assistant,
+  partager l’accès privé et saisir manuellement les kcal de chaque portion.
+- **Stockage :** fichier JSON privé sur volume persistant, écritures atomiques
+  et sérialisées pour une instance, additions en dixièmes de kcal.
+- **Alternatives :** base distante, inutile au premier usage personnel ; estimation
+  par petit modèle visuel, non retenue car les valeurs seraient peu fiables.
+- **Conséquences :** aucune clé ni modèle requis pour suivre les repas. Objectif
+  facultatif sans valeur imposée, export JSON privé, limites explicites pour
+  une seule instance serveur. Pas de déploiement en production automatique.
+- **Livrables :** [périmètre](CALORIES.md), code et tests de persistance.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown

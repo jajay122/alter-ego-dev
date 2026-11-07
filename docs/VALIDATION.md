@@ -55,3 +55,31 @@ de disponibilité permanente du serveur de travail. Aucun test physique Android,
 audit complet d’accessibilité, évaluation OCR, benchmark de français ou essai
 exhaustif sur images complexes. Le modèle peut halluciner et les sources ne
 couvrent pas tout Internet. Toute mise en production exige une validation humaine.
+
+## Mise à jour : suivi calories
+
+- npm test : **26 tests réussis** (14 existants et 12 dédiés au journal).
+- npm run check et git diff --check exécutés sur la version modifiée.
+- Tests du journal : dates civiles, journées distinctes, décimales exactes,
+  ajout idempotent, écritures concurrentes d’une instance, version de correction,
+  persistance, fichier corrompu, accès privés, export et stockage inaccessible.
+- Nouveau serveur démarré dans un test HTTP : entrées conservées, session à refaire.
+- Parcours Chromium réel : ajout, modification, date précédente/suivante, repère
+  facultatif, export, annulation puis confirmation de suppression, verrouillage
+  et reprise après redémarrage effectif du processus serveur.
+- Écran de 360 × 800 puis 1 365 × 1 000 pixels : aucun débordement horizontal et
+  aucune erreur JavaScript de page. Locale française et fuseau Europe/Paris.
+- Date contrôlée : à 23 h 30 UTC le 7 novembre, le journal choisit bien le
+  8 novembre à Paris. Le modèle était volontairement indisponible durant le test.
+- Configuration Compose vérifiée en mémoire avec un mot de passe éphémère :
+  application seule par défaut, volume de journal persistant, modèle optionnel
+  via le profil assistant. Aucune valeur de secret affichée, aucun déploiement.
+
+Les données et objectifs utilisés dans les essais navigateur sont fictifs,
+saisis dans un dossier temporaire supprimé à la fin. Aucun aliment ni objectif
+de démonstration n’est injecté au premier démarrage réel. Les captures sont
+locales dans artifacts/calories-mobile.png et artifacts/calories-desktop.png.
+
+Le stockage prévu est mono-processus. Pas de test Android physique ni de reprise
+après coupure électrique ou perte complète du volume. Les calories sont des
+valeurs manuelles ; leur exactitude nutritionnelle n’est pas vérifiée.

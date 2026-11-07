@@ -31,3 +31,11 @@ versions et empreintes vérifiées, contrôles d’accès et tâches réels test
 procédure d’arrêt disponible et approbation humaine de la version et de la cible.
 Un redémarrage de l’application révoque les sessions. Aucun historique utilisateur
 n’est stocké sur disque dans cette version.
+
+## Suivi calories : démarrage sans modèle
+
+Le service app peut fonctionner seul. Le profil assistant n’active le modèle que
+sur demande. Un volume journal-data est monté dans /app/.data pour conserver le
+journal malgré les redémarrages et mises à jour de conteneur. Ne pas supprimer
+ce volume ni exécuter down -v sans sauvegarde et décision explicite du propriétaire.
+Le volume est privé ; prévoir une sauvegarde avant mise à jour.

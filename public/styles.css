@@ -6,3 +6,5 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.side-calories{display:block;color:var(--muted);text-decoration:none;font-size:12px;padding:12px 10px;margin-bottom:8px}.side-calories:hover{color:var(--accent)}
+@media(max-width:580px){.side-calories{font-size:10px;padding:7px 0 0;margin:0}.sidebar{position:relative}.side-calories{position:absolute;right:20px;top:22px}}

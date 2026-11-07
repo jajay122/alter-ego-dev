@@ -20,7 +20,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 360, height: 800 }, deviceScaleFactor: 1 });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('http://127.0.0.1:3300/');
+  await page.goto('http://127.0.0.1:3300/assistant');
   await page.locator('#password').fill('incorrect');
   await page.getByRole('button', { name: /Entrer/ }).click();
   await page.getByText('Le mot de passe est incorrect.').waitFor();

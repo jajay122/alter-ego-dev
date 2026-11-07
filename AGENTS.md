@@ -4,7 +4,8 @@
 
 Organiser la conception d’applications web et mobiles depuis un téléphone Android,
 avec GitHub et Codex dans ChatGPT. Le propriétaire a autorisé le 7 novembre 2026
-la création d’un petit assistant IA avec un modèle installé sur le serveur.
+la création d’un petit assistant local, puis d’une première application de
+suivi de calories avec saisie manuelle et sauvegarde privée.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement
@@ -41,7 +42,7 @@ dans l’environnement de travail d’un service réellement déployé et perman
 2. Utiliser une branche distincte par fonctionnalité ou changement cohérent :
    `feat/<sujet>`, `fix/<sujet>` ou `docs/<sujet>`. Ne pas travailler directement
    sur la branche d’intégration ; identifier sa référence réelle avant de créer
-   une branche. Pour le prototype : `feat/assistant-leger`.
+   une branche. Pour le suivi de calories : `feat/suivi-calories`.
 3. Avant chaque tâche, indiquer le rôle pilote, les fichiers concernés, les
    dépendances et les critères de fin. Préférer des tâches courtes et des PR
    faciles à relire sur téléphone.

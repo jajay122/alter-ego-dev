@@ -1,6 +1,13 @@
 # Roadmap — ALTER EGO
 
-## Réalisé dans le prototype
+## Première application : suivi calories
+
+- Saisie manuelle par portion, journée et repas.
+- Totaux, modification, suppression, objectif facultatif et export.
+- Stockage privé persistant, tests de concurrence et de redémarrage.
+- Accueil dédié, indépendant du modèle IA.
+
+## Assistant complémentaire conservé
 
 - Organisation des dix rôles et règles Git.
 - Interface privée utilisable depuis un navigateur Android.
@@ -16,7 +23,7 @@ consignés dans [VALIDATION.md](VALIDATION.md).
 
 | Priorité | Travail | Condition de fin |
 | --- | --- | --- |
-| 1 | Évaluer le français et les photos du propriétaire. | Qualité jugée suffisante pour les usages choisis, sans inventer de capacités. |
+| 1 | Essayer le journal et sauvegarder le volume privé. | Saisie des portions claire, reprise des données et export vérifiés sur l’usage réel. |
 | 2 | Choisir une machine permanente et préparer HTTPS. | CPU, RAM, coût et disponibilité réellement vérifiés ; secrets configurés hors Git. |
 | 3 | Mettre en service après validation humaine. | Version exacte approuvée, authentification vérifiée, modèle non exposé. |
 | 4 | Construire le catalogue privé des prochaines applications. | Fiches administrables, recherche et liens réels. |
