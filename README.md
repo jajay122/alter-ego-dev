@@ -1,75 +1,82 @@
-# ALTER EGO — Petit assistant local
+# ALTER EGO — Suivi calories
 
-Prototype privé pour poser une question simple, lire les informations visibles
-d’une photo et rechercher des informations dans Wikipédia. Le modèle
-SmolVLM-256M est installé sur la machine du SaaS et exécuté avec llama.cpp.
-Aucune API d’IA externe ni abonnement à un modèle n’est utilisé.
+Première application privée : noter les calories des portions consommées,
+consulter ses journées et retrouver ses entrées après redémarrage. Le petit
+assistant local reste disponible à côté, sur /assistant.
 
-## Démarrer sur une machine locale
+## Démarrage local
 
-Prérequis : Node.js 24, Docker, environ 1 Go de disque disponible pour le moteur
-et les poids et au moins 2 Go de RAM disponibles pour le modèle. La consommation
-réelle dépend de la taille des images et de la machine.
+Prérequis pour le suivi : Node.js 24. Aucun paquet npm, modèle IA ou compte
+externe n’est nécessaire.
+
+```sh
+cp .env.example .env.local
+# Définir ASSISTANT_PASSWORD dans .env.local (au moins 12 caractères).
+npm start
+```
+
+Ouvrir http://127.0.0.1:3000. Le même mot de passe protège les deux applications.
+Les données du journal sont écrites dans .data/calories.json, hors Git, ou dans
+le dossier désigné par CALORIES_DATA_DIR.
+
+## Fonctionnalités
+
+- Journée choisie selon la date locale du téléphone.
+- Ajout d’un aliment ou d’un plat, kcal de la portion et repas.
+- Totaux quotidiens et par repas, avec une décimale.
+- Modification et suppression avec confirmation.
+- Objectif quotidien facultatif, saisi par le propriétaire et retirable.
+- Export JSON de tout le journal et de l’objectif.
+- Sauvegarde serveur, refus d’accès sans session, protection contre les doublons
+  après une nouvelle tentative et contre les corrections obsolètes d’un autre onglet.
+
+Les valeurs sont saisies manuellement : pas d’estimation par photo, de base
+alimentaire intégrée, de calcul de besoins ou de conseil nutritionnel automatique.
+Aucun objectif n’est imposé. Ce journal enregistre ce que le propriétaire saisit.
+
+## Stockage
+
+Le fichier est enregistré par remplacement atomique après synchronisation du
+contenu sur disque, avec des permissions privées. Un journal illisible est
+signalé et n’est jamais silencieusement remplacé. Le stockage est prévu pour
+un seul processus serveur et un seul propriétaire, avec 20 000 entrées maximum.
+
+Le bouton Exporter télécharge un JSON privé. Conserver également une sauvegarde
+du volume avant une mise à jour. La restauration/importation depuis l’interface
+n’est pas incluse dans cette version. Ne jamais publier le dossier .data ni un
+export dans Git.
+
+## Docker et accès Android
+
+Le fichier compose.yaml fournit un volume persistant journal-data. Le modèle IA
+est optionnel : le profil assistant l’active, tandis que le suivi fonctionne seul.
+L’image crée le dossier de données avec le propriétaire node lors de la copie.
+
+Avant toute mise en production : choisir une machine, configurer HTTPS,
+PUBLIC_ORIGIN et le mot de passe par un moyen sécurisé, puis obtenir la validation
+humaine de la version et de la cible. Le port est local par défaut.
+
+```sh
+# Après configuration et approbation du déploiement :
+docker compose --env-file .env.local up -d --build
+# Le volume est conservé lors d’un arrêt sans l’option -v.
+```
+
+Aucune machine ou adresse de production n’est créée par ce dépôt. Le logiciel
+est gratuit ; un hébergement permanent gratuit n’est pas fourni.
+
+## Petit assistant optionnel
+
+L’assistant sur /assistant peut utiliser SmolVLM-256M installé côté serveur pour
+texte et photo, avec recherche Wikipédia. Il n’est pas utilisé pour les calculs
+du journal. Voir [LOCAL_MODEL.md](docs/LOCAL_MODEL.md) pour les limites du modèle.
 
 ```sh
 npm run model:install
 npm run model:start
-cp .env.example .env.local
-# Dans .env.local, définir ASSISTANT_PASSWORD (12 caractères minimum).
-npm start
+# Ou, dans une installation Compose approuvée :
+# docker compose --env-file .env.local --profile assistant up -d
 ```
-
-L’application écoute sur http://127.0.0.1:3000. Aucun paquet npm n’est nécessaire
-pour le produit. Le premier téléchargement nécessite Internet, puis le texte et
-les photos sont traités localement, même sans réseau. La recherche Wikipédia,
-elle, nécessite Internet. Le téléchargement initial du moteur Docker est distinct
-du téléchargement des poids.
-
-Le script model:start démarre uniquement le moteur local, sur 127.0.0.1:8081.
-Le modèle est rechargé au redémarrage de Docker grâce à restart unless-stopped.
-L’application doit également rester démarrée. Arrêter le modèle :
-
-```sh
-npm run model:stop
-```
-
-## Accès depuis Android et hébergement
-
-Un accès distant demande une machine allumée, un proxy HTTPS et PUBLIC_ORIGIN
-égal à l’URL réelle. Le mot de passe reste côté serveur. Le modèle ne doit
-jamais être exposé directement sur Internet. Le fichier compose.yaml prépare
-cette séparation : modèle sur un réseau interne, application accessible seulement
-sur un port local destiné au proxy HTTPS.
-
-```sh
-# Les poids doivent déjà être téléchargés.
-# Configurer PUBLIC_ORIGIN et ASSISTANT_PASSWORD par un moyen sécurisé.
-docker compose --env-file .env.local config --quiet
-docker compose --env-file .env.local up -d
-```
-
-Ces commandes d’hébergement ne sont à exécuter qu’après validation humaine du
-déploiement cible. Aucun serveur de production n’a été créé par cette version.
-Le logiciel est gratuit ; un serveur permanent gratuit n’est pas fourni par le
-dépôt. Les environnements gratuits de fonctions web ne maintiennent pas ce
-moteur en mémoire en continu. Voir [HOSTING.md](docs/HOSTING.md).
-
-## Fonctions et limites
-
-- Texte : petites questions et explications ; aucun outil d’exécution de commandes.
-- Photo : JPEG, PNG ou WebP, 3 Mo maximum. Décrire des éléments visibles ; ne pas
-  compter sur ce petit modèle pour une transcription précise ou un raisonnement fiable.
-- Internet : recherche dans Wikipédia en français, avec liens réels fournis par
-  l’API ; ce n’est pas un moteur de recherche généraliste de tout le web.
-- Une demande à la fois, réponse bornée à 180 tokens, limite locale de 20 demandes
-  par heure pour préserver le processeur. Ce n’est pas un quota d’API payante.
-- SmolVLM-256M a surtout été entraîné pour l’anglais. Il peut répondre en anglais,
-  se tromper en français et mal interpréter des détails visuels.
-- Les résultats ne sont pas sauvegardés sur disque. Les photos sont transmises du
-  téléphone au serveur privé, puis au moteur local ; elles ne sont pas envoyées à
-  un service d’IA distant. La recherche envoie uniquement la question à Wikipédia.
-- Sessions d’une heure en mémoire, cookie HttpOnly et SameSite=Strict, protection
-  d’origine, limite de tentatives de connexion. Redémarrer le serveur déconnecte.
 
 ## Vérification
 
@@ -79,14 +86,13 @@ npm run check
 git diff --check
 ```
 
-Les tests automatisés utilisent un faux fournisseur pour vérifier les accès,
-les erreurs et les limites de façon reproductible. Les essais réels du modèle
-sont distingués dans [VALIDATION.md](docs/VALIDATION.md).
+Pour le parcours navigateur, installer Playwright et Chromium dans un environnement
+de test, puis exécuter node scripts/calories-browser-check.mjs. La variable
+PLAYWRIGHT_MODULE peut désigner un module installé hors dépôt. Le script crée
+un journal temporaire avec des données de test, sans utiliser les données réelles.
+Le contrôle de l’assistant reste dans scripts/browser-check.mjs.
 
-## Documents
-
-- [Produit](docs/PRODUCT.md)
+- [Suivi calories : périmètre](docs/CALORIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [Modèle installé](docs/LOCAL_MODEL.md)
-- [Roadmap](docs/ROADMAP.md)
+- [Résultats de validation](docs/VALIDATION.md)
 - [Rôles et règles](AGENTS.md)

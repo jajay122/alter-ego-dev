@@ -1,12 +1,13 @@
-# Applications du portail ALTER EGO
+# Applications ALTER EGO
 
-| Application | Fonction | État | Accès |
+| Application | Fonction | État | Route locale |
 | --- | --- | --- | --- |
-| Petit assistant local | Questions simples, analyse de photo, recherche Wikipédia. | Prototype implémenté et testé dans l’environnement de travail. | Local uniquement ; aucune adresse de production. |
+| Suivi calories | Journal privé, totaux quotidiens, correction et export. | Première application implémentée et vérifiée. | / et /calories |
+| Petit assistant local | Texte, photo et recherche Wikipédia avec modèle installé. | Conservé, indépendant du journal. | /assistant |
 
-Le portail reste privé et pourra regrouper les prochaines applications.
-Cette liste documentaire ne simule ni un catalogue déployé ni des services actifs.
+Les deux applications utilisent la même session privée. Aucune adresse de
+production n’est publiée par ce changement.
 
-- [Produit et première application](PRODUCT.md)
+- [Suivi calories](CALORIES.md)
+- [Modèle optionnel](LOCAL_MODEL.md)
 - [Architecture](ARCHITECTURE.md)
-- [Modèle installé](LOCAL_MODEL.md)

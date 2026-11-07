@@ -1,5 +1,6 @@
 services:
   model:
+    profiles: [assistant]
     image: ghcr.io/ggml-org/llama.cpp@sha256:41988e510b6fe0a0b5b9be00a9dbf91d9f0fa691da173d7b06d97d370329fe84
     command: ["-m", "/models/SmolVLM-256M-Instruct-Q8_0.gguf", "--mmproj", "/models/mmproj-SmolVLM-256M-Instruct-Q8_0.gguf", "--alias", "local", "--host", "0.0.0.0", "--port", "8080", "--ctx-size", "2048", "--parallel", "1", "--threads", "2", "--n-gpu-layers", "0", "--no-mmproj-offload", "--no-webui", "--no-slots", "--offline", "--log-verbosity", "1"]
     volumes:
@@ -21,7 +22,8 @@ services:
       ASSISTANT_PASSWORD: ${ASSISTANT_PASSWORD:?Configurer un mot de passe privé}
     ports: ["127.0.0.1:3000:3000"]
     networks: [model, web]
-    depends_on: [model]
+    volumes:
+      - journal-data:/app/.data
     restart: unless-stopped
     read_only: true
     cap_drop: [ALL]
@@ -31,3 +33,5 @@ networks:
   model:
     internal: true
   web: {}
+volumes:
+  journal-data: {}

@@ -78,3 +78,11 @@ recherche Internet avec un modèle installé côté serveur, sans API d’IA dis
 Le premier prototype est décrit dans [LOCAL_MODEL.md](LOCAL_MODEL.md).
 Les critères du catalogue ci-dessus restent un objectif ultérieur ; ils ne
 sont pas présentés comme une application déjà construite.
+
+## Priorité actuelle : suivi de calories
+
+Le propriétaire demande de commencer par une application de suivi de calories.
+Elle devient la première application et l’accueil, avec saisie manuelle, totaux
+par journée et repas, correction, export et sauvegarde privée. Le petit assistant
+est conservé comme application complémentaire. Le modèle IA n’est pas utilisé
+pour estimer les valeurs alimentaires. Voir [CALORIES.md](CALORIES.md).

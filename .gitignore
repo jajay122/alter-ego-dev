@@ -7,3 +7,5 @@ artifacts/
 *.log
 .models/
 .runtime/
+.data/*
+!.data/.gitkeep
