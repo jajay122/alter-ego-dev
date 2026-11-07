@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f0"><title>ALTER EGO — Mes applications</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="/calories.css"><link rel="stylesheet" href="/portal.css"><script src="/portal.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar"><a class="brand" href="/" aria-label="ALTER EGO, accueil"><img src="/icon.svg" alt="" width="36" height="36"><span>ALTER EGO<small>VOTRE ESPACE PERSONNEL</small></span></a><p class="nav-label">MON ESPACE</p><nav aria-label="Applications"><a class="nav-current" href="/" aria-current="page"><span aria-hidden="true">◈</span> Mes applications</a><a href="/calories"><span aria-hidden="true">◉</span> Suivi calories</a><a href="/assistant"><span aria-hidden="true">✦</span> Petit assistant</a></nav><div class="side-note"><span class="leaf" aria-hidden="true">◎</span><h2>Vos outils.<br>Un seul endroit.</h2><p>Un espace personnel qui grandit avec vos projets.</p></div><div class="privacy"><span class="dot"></span> Espace privé</div></aside>
+    <main>
+      <header class="topbar"><span>Mon espace <span class="slash">/</span> <strong>Mes applications</strong></span><button id="portal-logout" class="text-button" hidden>Verrouiller</button></header>
+      <div class="content portal-content">
+        <p class="eyebrow">BIENVENUE DANS ALTER EGO</p><h1>Votre espace.<br><span>Toutes vos idées.</span></h1><p class="intro">Retrouvez vos applications et passez de l’une à l’autre, à votre rythme.</p>
+        <div class="section-heading"><h2>Mes applications</h2><span>2 applications</span></div>
+        <div class="app-grid">
+          <article class="app-card"><div class="app-card-top"><span class="app-symbol food-symbol" aria-hidden="true">◉</span><span class="app-tag">QUOTIDIEN</span></div><h2>Suivi calories</h2><p>Gardez une trace de vos repas, consultez vos journées et retrouvez vos repères personnels.</p><ul><li>Journal et totaux par repas</li><li>Sauvegarde privée et export</li></ul><a class="primary app-open" href="/calories">Ouvrir l’application <span aria-hidden="true">→</span></a></article>
+          <article class="app-card"><div class="app-card-top"><span class="app-symbol assistant-symbol" aria-hidden="true">✦</span><span class="app-tag">MODÈLE LOCAL</span></div><h2>Petit assistant</h2><p>Posez une question simple, explorez un sujet sur Wikipédia ou regardez les détails d’une photo.</p><ul><li>Texte, photo et sources web</li><li>Sans API d’IA externe</li></ul><a class="secondary app-open" href="/assistant">Ouvrir l’application <span aria-hidden="true">→</span></a></article>
+        </div>
+        <div class="future-note"><span aria-hidden="true">+</span><p>Et ensuite ?<br><strong>Vos prochaines applications trouveront leur place ici.</strong></p></div>
+        <p id="portal-status" class="status" role="status" aria-live="polite">Vérification de votre session privée…</p>
+      </div>
+      <footer class="footer"><span>ALTER EGO <span>·</span> Des outils qui vous ressemblent.</span><span>Un espace, plusieurs applications.</span></footer>
+    </main>
+  </div>
+</body>
+</html>

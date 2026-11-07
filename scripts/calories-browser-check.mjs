@@ -36,6 +36,12 @@ try {
   page.on('pageerror', e => errors.push(e.message));
   await page.clock.install({ time: new Date('2026-11-07T23:30:00.000Z') });
   await page.goto(url);
+  await page.getByRole('heading', { name: 'Mes applications', exact: true }).waitFor();
+  if (await page.locator('.app-card').count() !== 2) throw new Error('Portal must show two real applications');
+  await page.waitForFunction(() => !document.getElementById('portal-status').textContent.includes('Vérification'));
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Portal mobile overflow');
+  await page.screenshot({ path: join(root, 'artifacts/portal-mobile.png'), fullPage: true });
+  await page.locator('.app-open[href="/calories"]').click();
   if (await page.locator('#day').inputValue() !== '2026-11-08') throw new Error('Calendar uses UTC instead of local day');
   async function login() {
     await page.locator('#password:not([disabled])').waitFor();
@@ -87,9 +93,20 @@ try {
   await page.locator('#goal-dialog').waitFor({ state: 'hidden' }); await page.getByText('Aucun objectif défini').waitFor();
   await page.locator('#logout').click(); await page.locator('#login-panel:not([hidden])').waitFor();
   if (await page.locator('#food-list').textContent()) throw new Error('Private data remains after logout');
+  await login();
+  await page.goto(url);
+  await page.locator('#portal-logout:not([hidden])').waitFor();
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Portal desktop overflow');
+  await page.screenshot({ path: join(root, 'artifacts/portal-desktop.png'), fullPage: true });
+  await page.locator('#portal-logout').click();
+  await page.getByText('Votre espace est verrouillé. Les données restent privées.').waitFor();
+  const privateStatus = await page.evaluate(async () => (await fetch('/api/calories/export')).status);
+  if (privateStatus !== 401) throw new Error('Portal logout does not revoke journal access');
+  await page.locator('.app-open[href="/assistant"]').click();
+  if (await page.title() === 'ALTER EGO — Mes applications') throw new Error('Assistant link returns to portal');
   if (errors.length) throw new Error(errors.join('\n'));
   const summary = { browser: 'Chromium', widths: [360, 1365], localDate: '2026-11-08 (Paris)',
-    additions: true, decimalTotals: true, edit: true, daySeparation: true, export: true,
+    portalNavigation: true, portalLogoutRevokesAccess: true, additions: true, decimalTotals: true, edit: true, daySeparation: true, export: true,
     actualServerRestart: true, deleteConfirmation: true, optionalGoal: true, logoutClearsData: true,
     horizontalOverflow: false, modelRunningRequired: false, pageErrors: errors };
   await writeFile(join(root, 'artifacts/calories-browser-check.json'), JSON.stringify(summary, null, 2));

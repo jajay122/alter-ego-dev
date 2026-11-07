@@ -10,7 +10,7 @@
     "start": "node --env-file-if-exists=.env.local server.mjs",
     "dev": "node --watch --env-file-if-exists=.env.local server.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs",
+    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs && node --check public/portal.js",
     "model:install": "node scripts/install-model.mjs",
     "model:start": "node scripts/model-service.mjs start",
     "model:stop": "node scripts/model-service.mjs stop"

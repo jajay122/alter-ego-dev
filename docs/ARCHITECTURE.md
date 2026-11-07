@@ -3,7 +3,8 @@
 ## État actuel
 
 La première application est un journal privé de suivi de calories. Le petit
-assistant texte, photo et recherche d’encyclopédie reste disponible à côté. Le portail de regroupement reste un objectif, décrit dans
+assistant texte, photo et recherche d’encyclopédie reste disponible à côté. Un portail sur / regroupe les deux applications ; les fiches sont statiques,
+pas encore administrables. Le périmètre général est décrit dans
 [PRODUCT.md](PRODUCT.md). Aucune API d’IA externe ni base distante n’est requise
 pour ce premier parcours. Aucun déploiement en production effectué.
 
@@ -27,7 +28,8 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 
 | Route | Usage | Protection |
 | --- | --- | --- |
-| GET / et /calories | Interface de verrouillage du suivi. | Aucun journal personnel retourné dans le HTML. |
+| GET / | Portail des applications. | Aucun journal personnel dans le HTML. |
+| GET /calories | Interface de verrouillage du suivi. | Journal lu seulement après authentification. |
 | GET /assistant | Interface de l’assistant existant. | Session commune pour les opérations privées. |
 | GET /api/session | État de session sans appel au modèle. | Aucun contenu personnel. |
 | GET /api/calories/day et /api/calories/export | Lecture ou export du journal. | Session obligatoire. |
@@ -71,3 +73,11 @@ nommé persistant et ne démarre pas le modèle sans le profil assistant. La
 configuration est prévue pour une seule instance ; pas de verrou interprocessus
 ni de base transactionnelle partagée dans ce prototype. L’export JSON complète
 les sauvegardes du volume, sans constituer un système de restauration intégré.
+
+## Extension nutritionnelle proposée
+
+Catalogue public/cache distinct du journal privé, fiches versionnées et sourcées,
+recherche par photo avec confirmation des portions, collecte web contrôlée :
+[plan proposé](research/NUTRITION_DATA_PLAN.md). Aucun import ni connecteur
+nutritionnel livré à ce stade ; SQLite est recommandé pour la prochaine étape,
+sans migration appliquée.

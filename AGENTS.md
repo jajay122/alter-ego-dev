@@ -5,7 +5,9 @@
 Organiser la conception d’applications web et mobiles depuis un téléphone Android,
 avec GitHub et Codex dans ChatGPT. Le propriétaire a autorisé le 7 novembre 2026
 la création d’un petit assistant local, puis d’une première application de
-suivi de calories avec saisie manuelle et sauvegarde privée.
+suivi de calories avec saisie manuelle et sauvegarde privée. Le suivi reste un
+module du portail ; catalogue nutritionnel, photo et recherche web font désormais
+l’objet d’une recherche et d’un plan de construction.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement

@@ -1,8 +1,8 @@
-# ALTER EGO — Suivi calories
+# ALTER EGO — Portail privé d’applications
 
-Première application privée : noter les calories des portions consommées,
-consulter ses journées et retrouver ses entrées après redémarrage. Le petit
-assistant local reste disponible à côté, sur /assistant.
+L’accueil regroupe vos applications : suivi calories sur /calories et petit
+assistant local sur /assistant. Le suivi est un module du SaaS, pas le SaaS entier.
+Le journal permet de noter les portions et de retrouver ses entrées après redémarrage.
 
 ## Démarrage local
 
@@ -96,3 +96,10 @@ Le contrôle de l’assistant reste dans scripts/browser-check.mjs.
 - [Architecture](docs/ARCHITECTURE.md)
 - [Résultats de validation](docs/VALIDATION.md)
 - [Rôles et règles](AGENTS.md)
+
+## Construction des fonctions nutritionnelles
+
+La [recherche documentée](docs/research/NUTRITION_RESEARCH.md) compare cinq
+applications, Open Food Facts/Ciqual/USDA et des travaux scientifiques. Le
+[plan technique](docs/research/NUTRITION_DATA_PLAN.md) prépare catalogue, photo
+assistée et recherche web sourcée. Ces connecteurs ne sont pas encore implémentés.
