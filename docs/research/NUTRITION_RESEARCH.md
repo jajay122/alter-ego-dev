@@ -1,5 +1,10 @@
 # Recherche nutrition — ALTER EGO
 
+> État ultérieur : le connecteur Open Food Facts, le cache SQLite/FTS5 et les
+> portions sourcées sont maintenant implémentés : [état courant](../NUTRITION.md).
+> Les constats de recherche et les autres propositions ci-dessous restent datés.
+
+
 Date : 7 novembre 2026. Le suivi calories est un module du SaaS privé ALTER EGO,
 à côté du petit assistant et des applications futures.
 

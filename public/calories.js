@@ -8,6 +8,9 @@ let deleting;
 let busy = false;
 let loadId = 0;
 let loadController;
+let selectedProduct;
+let searchController;
+let searchId = 0;
 
 function localDate(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -24,6 +27,7 @@ function session(authenticated) {
   $('login-panel').hidden = authenticated;
   $('logout').hidden = !authenticated;
   if (!authenticated) {
+    resetSearch();
     loadController?.abort();
     loadId++;
     dayData = undefined;
@@ -80,6 +84,12 @@ function render(data) {
     const title = document.createElement('h3'); title.textContent = entry.name;
     const meal = document.createElement('p'); meal.textContent = meals[entry.meal];
     info.append(title, meal);
+    if (entry.nutrition) {
+      const source = document.createElement('a');
+      source.className = 'entry-source'; source.href = entry.nutrition.sourceUrl; source.target = '_blank'; source.rel = 'noopener noreferrer';
+      source.textContent = `${number(entry.nutrition.quantity)} ${entry.nutrition.unit} · Open Food Facts (ODbL)`;
+      info.append(source);
+    }
     const energy = document.createElement('span'); energy.className = 'food-energy'; energy.textContent = number(entry.kcal);
     const unit = document.createElement('small'); unit.textContent = 'kcal'; energy.append(unit);
     const actions = document.createElement('div'); actions.className = 'row-actions';
@@ -124,13 +134,15 @@ function changeDay(offset) {
 }
 function openFood(entry) {
   if (busy) return;
-  draft = entry ? { id: entry.id, version: entry.version, date: entry.date } : { id: crypto.randomUUID(), date: $('day').value, isNew: true };
+  resetSearch();
+  draft = entry ? { id: entry.id, version: entry.version, date: entry.date, preserveNutrition: Boolean(entry.nutrition) } : { id: crypto.randomUUID(), date: $('day').value, isNew: true };
   $('food-dialog-title').textContent = entry ? 'Modifier une entrée' : 'Ajouter un aliment';
   $('entry-date').textContent = prettyDate(draft.date);
   $('food-name').value = entry?.name || '';
   $('food-kcal').value = entry?.kcal ?? '';
   $('food-meal').value = entry?.meal || 'breakfast';
   $('food-error').textContent = '';
+  if (entry?.nutrition) $('search-status').textContent = 'La source sera conservée si le nom et les calories restent inchangés. Pour changer la portion, recherchez le produit.';
   $('food-dialog').showModal();
   $('food-name').focus();
 }
@@ -151,7 +163,10 @@ $('food-form').addEventListener('submit', async event => {
   event.preventDefault();
   if (busy || !draft) return;
   const body = { name: $('food-name').value, kcal: Number($('food-kcal').value), meal: $('food-meal').value, date: draft.date,
-    ...(draft.isNew ? { operationId: draft.id } : { version: draft.version }) };
+    ...(draft.isNew ? { operationId: draft.id } : { version: draft.version, preserveNutrition: draft.preserveNutrition }),
+    ...(selectedProduct ? { catalogPortion: { code: selectedProduct.code, retrievedAt: selectedProduct.retrievedAt,
+      quantity: Number($('portion-quantity').value), unit: $('portion-unit').value, basisConfirmed: true } } : {}) };
+  if (selectedProduct && (!['g', 'ml'].includes($('portion-unit').value) || !$('portion-quantity').value)) { $('food-error').textContent = 'Confirmez la quantité et l’unité de l’étiquette.'; return; }
   setBusy(true); $('food-error').textContent = '';
   try {
     await request(draft.isNew ? '/api/calories/entries' : `/api/calories/entries/${draft.id}`, { method: draft.isNew ? 'POST' : 'PUT', body });
@@ -221,3 +236,73 @@ async function init() {
   } catch (error) { status(error.message, true); }
 }
 init();
+
+
+function resetSearch() {
+  searchController?.abort(); searchId++;
+  selectedProduct = undefined;
+  $('selected-product').hidden = true;
+  $('search-results').replaceChildren();
+  $('search-status').textContent = '';
+  $('food-query').value = '';
+  $('portion-quantity').value = '';
+  $('portion-unit').value = '';
+  $('portion-quantity').required = false;
+  $('portion-unit').required = false;
+  $('food-name').readOnly = false;
+  $('food-kcal').readOnly = false;
+  $('search-food').disabled = false;
+}
+function calculatePortion() {
+  if (!selectedProduct) return;
+  const qty = Number($('portion-quantity').value);
+  $('food-kcal').value = qty > 0 && ['g', 'ml'].includes($('portion-unit').value)
+    ? Math.round(selectedProduct.kcalPer100 * qty / 100 * 10) / 10 : '';
+}
+$('portion-quantity').addEventListener('input', calculatePortion);
+$('portion-unit').addEventListener('change', calculatePortion);
+$('manual-food').addEventListener('click', () => {
+  if (busy) return;
+  resetSearch(); $('food-kcal').value = '';
+  if (draft) draft.preserveNutrition = false;
+  $('food-name').focus();
+});
+$('food-dialog').addEventListener('close', resetSearch);
+$('search-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (busy) return;
+  searchController?.abort();
+  const id = ++searchId;
+  searchController = new AbortController();
+  $('search-food').disabled = true;
+  $('search-status').textContent = 'Recherche en cours…';
+  $('search-results').replaceChildren();
+  try {
+    const data = await request(`/api/nutrition/search?q=${encodeURIComponent($('food-query').value)}${$('local-search').checked ? '&local=1' : ''}`, { signal: searchController.signal });
+    if (id !== searchId || !$('food-dialog').open) return;
+    $('search-status').textContent = data.warning || (data.products.length ? `${data.products.length} produit(s) trouvé(s)${data.mode === 'cache' ? ' dans le cache' : ''}. Choisissez votre produit.` : 'Aucun produit trouvé. Essayez un autre nom ou la saisie manuelle.');
+    for (const product of data.products) {
+      const li = document.createElement('li');
+      const title = document.createElement('strong'); title.textContent = product.name;
+      const detail = document.createElement('p');
+      detail.textContent = `${product.brand || 'Marque non renseignée'} · ${product.code} · ${product.kcalPer100 === null ? 'Énergie non renseignée' : `${number(product.kcalPer100)} kcal / 100 g ou 100 ml`} · Consulté le ${new Date(product.retrievedAt).toLocaleDateString('fr-FR')}`;
+      const choose = document.createElement('button'); choose.type = 'button'; choose.className = 'secondary'; choose.textContent = 'Choisir';
+      choose.setAttribute('aria-label', `Choisir ${product.name}`); choose.disabled = product.kcalPer100 === null;
+      choose.addEventListener('click', () => {
+        if (busy) return;
+        selectedProduct = product;
+        $('selected-product').hidden = false;
+        $('product-detail').textContent = `${product.name} · ${number(product.kcalPer100)} kcal pour 100 g ou 100 ml${product.energyMethod === 'converted-kj' ? ' (conversion depuis les kJ)' : ''}. Vérifiez l’étiquette.`;
+        $('product-source').href = product.sourceUrl;
+        $('food-name').value = product.name; $('food-name').readOnly = true;
+        $('food-kcal').value = ''; $('food-kcal').readOnly = true;
+        $('portion-quantity').value = ''; $('portion-unit').value = '';
+        $('portion-quantity').required = true; $('portion-unit').required = true;
+        $('search-results').replaceChildren(); $('search-status').textContent = 'Produit choisi. Confirmez maintenant la quantité et l’unité.';
+        $('portion-quantity').focus();
+      });
+      li.append(title, detail, choose); $('search-results').append(li);
+    }
+  } catch (error) { if (error.name !== 'AbortError' && id === searchId) $('search-status').textContent = error.message; }
+  finally { if (id === searchId) $('search-food').disabled = false; }
+});

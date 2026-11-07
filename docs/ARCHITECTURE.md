@@ -6,7 +6,7 @@ La première application est un journal privé de suivi de calories. Le petit
 assistant texte, photo et recherche d’encyclopédie reste disponible à côté. Un portail sur / regroupe les deux applications ; les fiches sont statiques,
 pas encore administrables. Le périmètre général est décrit dans
 [PRODUCT.md](PRODUCT.md). Aucune API d’IA externe ni base distante n’est requise
-pour ce premier parcours. Aucun déploiement en production effectué.
+pour la saisie manuelle ; le connecteur OFF utilise Internet. Aucun déploiement en production effectué.
 
 ## Composants
 
@@ -31,6 +31,7 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 | GET / | Portail des applications. | Aucun journal personnel dans le HTML. |
 | GET /calories | Interface de verrouillage du suivi. | Journal lu seulement après authentification. |
 | GET /assistant | Interface de l’assistant existant. | Session commune pour les opérations privées. |
+| GET /api/nutrition/search?q=... | Catalogue Open Food Facts et cache local. | Session obligatoire, entrée bornée, quotas persistants. |
 | GET /api/session | État de session sans appel au modèle. | Aucun contenu personnel. |
 | GET /api/calories/day et /api/calories/export | Lecture ou export du journal. | Session obligatoire. |
 | POST /api/calories/entries, PUT et DELETE /api/calories/entries/:id | Création, correction et suppression. | Session, origine, validation et version d’entrée. |
@@ -78,6 +79,16 @@ les sauvegardes du volume, sans constituer un système de restauration intégré
 
 Catalogue public/cache distinct du journal privé, fiches versionnées et sourcées,
 recherche par photo avec confirmation des portions, collecte web contrôlée :
-[plan proposé](research/NUTRITION_DATA_PLAN.md). Aucun import ni connecteur
-nutritionnel livré à ce stade ; SQLite est recommandé pour la prochaine étape,
-sans migration appliquée.
+[plan proposé](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF et un cache SQLite avec index FTS5 sont désormais livrés,
+sans migration du journal. Voir [NUTRITION.md](NUTRITION.md). Ciqual, USDA,
+photo/OCR et collecte web générale restent proposés.
+
+## Cache alimentaire
+
+lib/nutrition.mjs utilise node:sqlite (API candidate à stabilisation en Node 24),
+avec requêtes préparées, index FTS5 et transactions. Le cache .data/nutrition.sqlite
+est distinct de calories.json et limité à 1 000 produits / 200 recherches. Les
+instantanés nutritionnels sont des champs optionnels du schéma 1 du journal :
+les anciennes entrées restent lisibles sans migration. Une ancienne version du
+serveur ne garantit pas la conservation de ces champs lors des corrections ;
+conserver code et sauvegarde correspondants pour un retour arrière.

@@ -22,7 +22,8 @@ le dossier désigné par CALORIES_DATA_DIR.
 ## Fonctionnalités
 
 - Journée choisie selon la date locale du téléphone.
-- Ajout d’un aliment ou d’un plat, kcal de la portion et repas.
+- Ajout manuel ou recherche Open Food Facts par nom/code-barres saisi.
+- Quantité en g ou ml confirmée, calories calculées côté serveur et source conservée.
 - Totaux quotidiens et par repas, avec une décimale.
 - Modification et suppression avec confirmation.
 - Objectif quotidien facultatif, saisi par le propriétaire et retirable.
@@ -30,8 +31,9 @@ le dossier désigné par CALORIES_DATA_DIR.
 - Sauvegarde serveur, refus d’accès sans session, protection contre les doublons
   après une nouvelle tentative et contre les corrections obsolètes d’un autre onglet.
 
-Les valeurs sont saisies manuellement : pas d’estimation par photo, de base
-alimentaire intégrée, de calcul de besoins ou de conseil nutritionnel automatique.
+Les valeurs proviennent de la saisie manuelle ou de fiches Open Food Facts
+consultées en ligne et conservées dans un cache SQLite local. Pas encore
+d’estimation alimentaire par photo, de calcul de besoins ou de conseil nutritionnel automatique.
 Aucun objectif n’est imposé. Ce journal enregistre ce que le propriétaire saisit.
 
 ## Stockage
@@ -102,4 +104,10 @@ Le contrôle de l’assistant reste dans scripts/browser-check.mjs.
 La [recherche documentée](docs/research/NUTRITION_RESEARCH.md) compare cinq
 applications, Open Food Facts/Ciqual/USDA et des travaux scientifiques. Le
 [plan technique](docs/research/NUTRITION_DATA_PLAN.md) prépare catalogue, photo
-assistée et recherche web sourcée. Ces connecteurs ne sont pas encore implémentés.
+assistée et recherche web sourcée. Le premier connecteur Open Food Facts est implémenté : voir
+[recherche alimentaire](docs/NUTRITION.md). Ciqual, USDA, photo/OCR et recherche
+web générale restent à construire.
+
+Le parcours nutritionnel se vérifie avec `node scripts/nutrition-browser-check.mjs`
+après installation de Playwright, comme le parcours manuel. La source distante
+y est simulée et les données restent temporaires.

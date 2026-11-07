@@ -1,5 +1,10 @@
 # Plan technique — Données et recherche nutritionnelles
 
+> État ultérieur : le connecteur Open Food Facts, le cache SQLite/FTS5 et les
+> portions sourcées sont maintenant implémentés : [état courant](../NUTRITION.md).
+> Les constats de recherche et les autres propositions ci-dessous restent datés.
+
+
 Statut : proposition de construction issue de la [recherche](NUTRITION_RESEARCH.md),
 7 novembre 2026. Rien de ce plan n’est présenté comme déjà connecté au journal.
 
