@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assistant.mjs';
 import { createCalorieStore } from './lib/calories.mjs';
+import { createNutritionCatalog } from './lib/nutrition.mjs';
 
 const staticFiles = new Map([
   ['/', ['portal.html', 'text/html; charset=utf-8']],
@@ -55,6 +56,7 @@ function readJson(req, maxBytes) {
 
 export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
   const calorieStore = createCalorieStore(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
+  const nutritionCatalog = createNutritionCatalog(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)), { fetchImpl });
   const sessions = new Map();
   const loginAttempts = new Map();
   const calls = [];
@@ -106,6 +108,10 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         }
         return json(200, await calorieStore.day(url.searchParams.get('date')));
       }
+      if (req.method === 'GET' && path === '/api/nutrition/search') {
+        if (!session) throw new AppError(401, 'UNAUTHORIZED', 'Connecte-toi pour rechercher un aliment.');
+        return json(200, await nutritionCatalog.search(url.searchParams.get('q'), { localOnly: url.searchParams.get('local') === '1' }));
+      }
       const entryPath = /^\/api\/calories\/entries\/([a-f0-9-]{36})$/i.exec(path);
       const calorieMutation = (path === '/api/calories/entries' && req.method === 'POST')
         || (path === '/api/calories/goal' && req.method === 'PUT')
@@ -146,6 +152,8 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       if (calorieMutation) {
         const body = await readJson(req, 4096);
         if (!body || typeof body !== 'object' || Array.isArray(body)) throw new AppError(400, 'INVALID_ENTRY', 'Le format de cette entrée est invalide.');
+        if ('nutrition' in body) throw new AppError(400, 'INVALID_NUTRITION', 'Choisis une fiche dans la recherche ou utilise la saisie manuelle.');
+        if (body.catalogPortion && (path === '/api/calories/entries' || (entryPath && req.method === 'PUT'))) Object.assign(body, await nutritionCatalog.portion(body.catalogPortion));
         if (path === '/api/calories/entries') return json(201, await calorieStore.add(body));
         if (path === '/api/calories/goal') return json(200, await calorieStore.setGoal(body.goal));
         if (req.method === 'PUT') return json(200, await calorieStore.update(entryPath[1], body));

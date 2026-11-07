@@ -2,7 +2,7 @@
 
 | Application | Fonction | État | Route locale |
 | --- | --- | --- | --- |
-| Suivi calories | Journal privé, totaux quotidiens, correction et export. | Première application implémentée et vérifiée. | /calories |
+| Suivi calories | Journal privé, recherche alimentaire, portions, totaux et export. | Première application implémentée et vérifiée. | /calories |
 | Petit assistant local | Texte, photo et recherche Wikipédia avec modèle installé. | Conservé, indépendant du journal. | /assistant |
 
 Les deux applications utilisent la même session privée. Aucune adresse de

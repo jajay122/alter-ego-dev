@@ -21,8 +21,8 @@ choisie par l’utilisateur ; elle ne doit pas basculer au jour UTC du serveur.
 
 Les calories sont stockées en dixièmes de kcal et additionnées comme des entiers.
 Le chiffre saisi concerne la portion consommée : l’application n’effectue aucune
-conversion implicite depuis une valeur pour 100 g. Les données ne sont pas
-estimées par IA ni tirées d’une base alimentaire non vérifiée.
+conversion implicite depuis une valeur pour 100 g. En mode recherche, les calories sont calculées depuis une fiche Open Food Facts
+et une quantité confirmée, avec conservation de la source. Aucun calcul par IA.
 
 L’objectif est facultatif, entier et défini par l’utilisateur, sans valeur
 par défaut. Il sert de repère pour toutes les journées consultées, pas de
@@ -52,15 +52,16 @@ Un propriétaire et un processus serveur ; fichier JSON local sur un volume
 persistant. Une exécution multi-instance nécessiterait un stockage transactionnel
 partagé. Les exports sont privés et ne doivent pas être ajoutés au dépôt.
 
-Pas de scan de code-barres, reconnaissance des aliments par photo, macros,
-base de produits, import par interface ou recommandation d’apport dans cette
-première version. Ces extensions pourront être décidées ensuite.
+Recherche par nom et code-barres saisi disponible avec cache local :
+[NUTRITION.md](NUTRITION.md). Pas encore de lecture de code-barres par caméra,
+photo alimentaire, affichage des macros, import de fichiers ou recommandation d’apport.
 
 - [Validation](VALIDATION.md)
 - [Architecture](ARCHITECTURE.md)
 
-## Extensions demandées
+## Extensions demandées — état actualisé
 
 Catalogue étendu, recherche par photo et recherche web nutritionnelle :
 [recherche et priorités](research/NUTRITION_RESEARCH.md),
-[plan de construction](research/NUTRITION_DATA_PLAN.md). À développer.
+[plan de construction](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF est livré ;
+les autres sources, la photo et le web général restent à développer.

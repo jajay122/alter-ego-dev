@@ -103,3 +103,37 @@ Non effectués : import de base alimentaire, connexion nutritionnelle photo/web,
 benchmark alimentaire du modèle, test Android physique, nouvelle construction
 Docker et déploiement. Les chiffres des sources ne constituent pas une mesure
 nutritionnelle ni une preuve de couverture de notre application.
+
+## Mise à jour : recherche alimentaire et portions — 7 novembre 2026
+
+- `npm test` : **36 tests réussis** (26 existants et 10 nouveaux), aucun échec
+  ni test ignoré. Nouveau périmètre : valeurs absentes/zéro/kJ, contrat HTTP,
+  cache/reprise/FTS5, quotas persistants, concurrence, formats invalides, source
+  figée, correction manuelle, unité/quantité obligatoires, cache corrompu et API privée.
+- `PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/calories-browser-check.mjs` : régression portail/journal réussie.
+- `PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/nutrition-browser-check.mjs` : parcours réussi avec fournisseur simulé,
+  à 360 et 1 365 pixels. Produit incomplet désactivé, confirmation de l’unité,
+  calcul 123,4 × 125 / 100 = 154,3 kcal, persistance de la source après rechargement,
+  conservation lors du changement de repas, cache local sans réseau, code-barres
+  saisi, retour manuel et message d’indisponibilité vérifiés. Aucune erreur de page.
+- Le premier passage de ce script a détecté une option HTML mal fermée ; corrigée,
+  puis parcours complet relancé avec succès. Capture mobile examinée ; formulaire
+  défilable dans la fenêtre modale, sans débordement horizontal.
+- Essais réels séparés avec `NODE_USE_ENV_PROXY=1` : code-barres public
+  `3017620422003` retrouvé via v3.6, sans énergie dans la réponse reçue (null conservé) ;
+  recherche `yaourt nature` par endpoint historique, dix produits retournés, dont
+  `6111242100206` à 78,5 kcal/100 unités. Valeurs observées, pas vérité nutritionnelle
+  certifiée. Cache temporaire supprimé ; aucune donnée ajoutée au journal réel.
+- L’essai sur le serveur de test avec ses identifiants HTTP publics de démonstration
+  a été refusé par le contrôle automatique d’approbation, à cause de leur transmission
+  externe. Aucun identifiant transmis ; alternative en lecture publique sans
+  authentification autorisée et réussie. Aucun besoin de lever ce refus.
+
+Pas de téléchargement du catalogue mondial, de connexion Ciqual/USDA, de benchmark
+photo/OCR, de scan caméra, de web général ou de test physique Android. Pas de nouvelle
+construction Docker ni de déploiement. Les tests réseau réels prouvent deux parcours
+ponctuels, pas une disponibilité permanente. Attribution et liens sources visibles ;
+pas d’audit juridique complet de toutes les redistributions possibles.
+
+Contrôles de clôture de cette mise à jour : `npm run check` et `git diff --check`
+réussis ; liens relatifs de 14 documents vérifiés, aucun chemin absent.

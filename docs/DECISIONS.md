@@ -137,6 +137,26 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** [recherche](research/NUTRITION_RESEARCH.md) et
   [plan](research/NUTRITION_DATA_PLAN.md) ; aucune précision photo revendiquée.
 
+## ADR-010 — Recherche OFF et portions traçables
+
+- **Date :** 2026-11-07.
+- **Statut :** implémenté et vérifié ; aucun déploiement.
+- **Décision :** requêtes publiques OFF à URL fixe, code-barres via v3.6 et texte
+  via l’endpoint historique documenté, faute de plein texte v3. Ce dernier est
+  une solution transitoire isolée dans le connecteur, à remplacer lors d’une
+  transition vers exports/index complet ou API de recherche actuelle validée.
+- **Stockage :** SQLite natif Node 24 et FTS5, au maximum 1 000 produits et
+  200 recherches. Les quotas et le cache persistent après redémarrage.
+- **Fiabilité :** énergie absente distincte de zéro ; unité g/ml confirmée d’après
+  l’étiquette ; calcul serveur et instantané dans le journal. Aucun LLM impliqué.
+- **Alternatives :** import complet différé pour le disque et la mise à jour ;
+  fichier JSON écarté pour ce cache indexé ; base distante inutile ici.
+- **Conséquences :** API node:sqlite encore candidate à stabilisation ; vérifier
+  les mises à jour Node. Attribution ODbL visible, pas de copie d’images. Les
+  termes recherchés quittent le serveur sauf en mode local, jamais le journal.
+- **Preuves :** [fonctionnement](NUTRITION.md), [validation](VALIDATION.md),
+  tests unitaires/HTTP, navigateur simulé et deux lectures publiques réelles.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
