@@ -6,7 +6,9 @@ import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assis
 import { createCalorieStore } from './lib/calories.mjs';
 
 const staticFiles = new Map([
-  ['/', ['calories.html', 'text/html; charset=utf-8']],
+  ['/', ['portal.html', 'text/html; charset=utf-8']],
+  ['/portal.css', ['portal.css', 'text/css; charset=utf-8']],
+  ['/portal.js', ['portal.js', 'text/javascript; charset=utf-8']],
   ['/calories', ['calories.html', 'text/html; charset=utf-8']],
   ['/assistant', ['index.html', 'text/html; charset=utf-8']],
   ['/calories.js', ['calories.js', 'text/javascript; charset=utf-8']],

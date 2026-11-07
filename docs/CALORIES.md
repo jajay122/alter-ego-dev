@@ -3,8 +3,8 @@
 ## Demande
 
 Le propriétaire souhaite commencer par une application de suivi de calories.
-Cette application devient l’accueil d’ALTER EGO. Le petit assistant est conservé
-sur /assistant ; le journal ne dépend pas du modèle.
+Cette application est un module sur /calories ; l’accueil / regroupe les outils.
+Le petit assistant est conservé sur /assistant ; le journal ne dépend pas du modèle.
 
 ## Parcours
 
@@ -58,3 +58,9 @@ première version. Ces extensions pourront être décidées ensuite.
 
 - [Validation](VALIDATION.md)
 - [Architecture](ARCHITECTURE.md)
+
+## Extensions demandées
+
+Catalogue étendu, recherche par photo et recherche web nutritionnelle :
+[recherche et priorités](research/NUTRITION_RESEARCH.md),
+[plan de construction](research/NUTRITION_DATA_PLAN.md). À développer.

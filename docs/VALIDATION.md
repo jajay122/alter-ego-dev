@@ -83,3 +83,23 @@ locales dans artifacts/calories-mobile.png et artifacts/calories-desktop.png.
 Le stockage prévu est mono-processus. Pas de test Android physique ni de reprise
 après coupure électrique ou perte complète du volume. Les calories sont des
 valeurs manuelles ; leur exactitude nutritionnelle n’est pas vérifiée.
+
+## Mise à jour : portail et recherche nutritionnelle — 7 novembre 2026
+
+- `npm test` : 26 tests réussis, aucun échec, aucun test ignoré.
+- `npm run check` et `git diff --check` : réussis.
+- `PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/calories-browser-check.mjs` : réussi dans Chromium.
+- Portail de deux applications : ouverture du suivi et de l’assistant vérifiée ;
+  rendu à 360 et 1 365 pixels sans débordement horizontal ; capture mobile examinée.
+- Session ouverte depuis le journal reconnue dans le portail ; verrouillage depuis
+  le portail puis export refusé avec HTTP 401. Aucune erreur JavaScript de page.
+- Régression du journal : saisie, correction, jours, export, suppression, repère
+  facultatif et reprise après redémarrage toujours vérifiés avec stockage temporaire.
+- Liens relatifs : 13 documents Markdown contrôlés, aucun chemin absent.
+- Recherche : pages officielles et publications citées dans le dossier ; le
+  sous-site Ciqual renvoyait une maintenance 503, distincte de la page ANSES accessible.
+
+Non effectués : import de base alimentaire, connexion nutritionnelle photo/web,
+benchmark alimentaire du modèle, test Android physique, nouvelle construction
+Docker et déploiement. Les chiffres des sources ne constituent pas une mesure
+nutritionnelle ni une preuve de couverture de notre application.

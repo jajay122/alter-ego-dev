@@ -119,6 +119,24 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
   une seule instance serveur. Pas de déploiement en production automatique.
 - **Livrables :** [périmètre](CALORIES.md), code et tests de persistance.
 
+## ADR-009 — Portail commun et extension nutritionnelle sourcée
+
+- **Date :** 2026-11-07.
+- **Statut :** portail implémenté ; connecteurs nutritionnels proposés, non livrés.
+- **Contexte :** le propriétaire précise que le suivi est une application parmi
+  les autres et demande grand catalogue, photo, web et recherche scientifique.
+- **Décision :** accueil / pour les applications, suivi /calories, assistant
+  /assistant ; session commune. Remplace uniquement le choix d’accueil d’ADR-008.
+- **Recommandation :** fédérer OFF, Ciqual et USDA avec provenance/version/unités,
+  cache/index local et confirmation des portions. L’IA retrouve des candidats,
+  elle ne fournit pas seule la vérité nutritionnelle.
+- **Alternatives :** catalogue propriétaire copié, modèle donnant des calories
+  sans référence et import massif immédiat écartés pour licence, fiabilité et disque.
+- **Conséquences :** vérifier disponibilité/licences/quotas avant ingestion,
+  dimensionner le stockage, préserver le journal historique. Pas de production.
+- **Preuves :** [recherche](research/NUTRITION_RESEARCH.md) et
+  [plan](research/NUTRITION_DATA_PLAN.md) ; aucune précision photo revendiquée.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
