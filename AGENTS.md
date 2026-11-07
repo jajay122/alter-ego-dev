@@ -3,8 +3,9 @@
 ## Objectif et périmètre
 
 Organiser la conception d’applications web et mobiles depuis un téléphone Android,
-avec GitHub et Codex dans ChatGPT. Cette phase produit uniquement des documents :
-ne créer ni application, ni infrastructure, ni déploiement sans nouvelle demande.
+avec GitHub et Codex dans ChatGPT. Le propriétaire a autorisé le 7 novembre 2026
+la création d’un petit assistant IA avec un modèle installé sur le serveur.
+La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement
 actifs. Une même session peut prendre plusieurs rôles successivement. La présence
@@ -29,9 +30,8 @@ restent prioritaires. Adapter les commandes à ce qui existe réellement dans le
 | DEVOPS | Préparer automatisation, CI, environnements et procédures de déploiement. | Workflows, configuration sans secrets, procédures de déploiement, surveillance et retour arrière. | Vérifications reproductibles ; séparation des environnements ; secrets externalisés ; production conditionnée à une approbation humaine explicite. |
 | REVIEWER | Relire le diff, cohérence, maintenabilité, portée et preuves de validation. | Revue avec constats priorisés, corrections demandées et avis d’intégration motivé. | Exigences couvertes ; aucun problème bloquant connu laissé sans résolution ; tests disponibles exécutés et limites visibles ; avis automatisé distinct d’une approbation humaine. |
 
-Les livrables de code et d’infrastructure ne deviennent exigibles que lorsque le
-développement correspondant est demandé. Ils ne doivent pas être créés pendant
-la présente phase documentaire.
+Créer uniquement le code utile au besoin demandé. Distinguer un moteur installé
+dans l’environnement de travail d’un service réellement déployé et permanent.
 
 ## Règles Git et coordination
 
@@ -41,7 +41,7 @@ la présente phase documentaire.
 2. Utiliser une branche distincte par fonctionnalité ou changement cohérent :
    `feat/<sujet>`, `fix/<sujet>` ou `docs/<sujet>`. Ne pas travailler directement
    sur la branche d’intégration ; identifier sa référence réelle avant de créer
-   une branche. Pour ce cadrage : `docs/alter-ego-dev` si disponible.
+   une branche. Pour le prototype : `feat/assistant-leger`.
 3. Avant chaque tâche, indiquer le rôle pilote, les fichiers concernés, les
    dépendances et les critères de fin. Préférer des tâches courtes et des PR
    faciles à relire sur téléphone.

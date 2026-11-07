@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101217">
+  <title>ALTER EGO — Mon petit assistant</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Votre espace">
+      <a class="brand" href="/" aria-label="ALTER EGO, accueil"><img src="/icon.svg" alt="" width="38" height="38"><span>ALTER EGO<small>MON ESPACE PERSONNEL</small></span></a>
+      <div class="side-label">VOTRE APPLICATION</div>
+      <div class="side-active"><span aria-hidden="true">✦</span> Petit assistant <span class="pill">LOCAL</span></div>
+      <div class="side-note"><span class="tiny-orbit" aria-hidden="true">◎</span><h2>Petit modèle.<br>À portée de main.</h2><p>Des mots, des images et un peu d’aide pour le quotidien.</p></div>
+      <footer class="sidebar-footer"><span class="dot"></span> Espace privé <span class="version">v0.1</span></footer>
+    </aside>
+    <main>
+      <header class="topbar"><span>Votre espace <span class="slash">/</span> <strong>Assistant</strong></span><button id="logout" class="quiet" hidden>Verrouiller <span aria-hidden="true">↗</span></button><span id="model-badge" class="local-badge">◎ Moteur local</span></header>
+      <section class="workspace">
+        <div class="eyebrow"><span class="line"></span> VOTRE PETIT COUP DE POUCE</div>
+        <h1>Un peu d’aide.<br><span>Tout simplement.</span></h1>
+        <p class="intro">Posez une question, explorez un sujet ou regardez une photo autrement.</p>
+
+        <section id="login-panel" class="login-card" aria-labelledby="login-title">
+          <div class="lock-icon" aria-hidden="true">⌁</div><div><h2 id="login-title">Un espace rien qu’à vous</h2><p>Déverrouillez votre assistant avec votre mot de passe privé.</p></div>
+          <form id="login-form"><label for="password">Mot de passe</label><div class="login-fields"><input id="password" type="password" autocomplete="current-password" required maxlength="256"><button class="primary" type="submit">Entrer <span aria-hidden="true">→</span></button></div></form>
+        </section>
+
+        <section id="assistant-panel" hidden aria-label="Utiliser l’assistant">
+          <div class="tools" role="group" aria-label="Type de tâche">
+            <button class="tool selected" data-mode="text" aria-pressed="true"><span aria-hidden="true">✦</span> Question</button>
+            <button class="tool" data-mode="web" aria-pressed="false"><span aria-hidden="true">◎</span> Internet</button>
+            <button class="tool" data-mode="photo" aria-pressed="false"><span aria-hidden="true">▧</span> Photo</button>
+          </div>
+          <form id="assistant-form" class="composer">
+            <div class="composer-top"><label id="prompt-label" for="prompt">Qu’avez-vous en tête ?</label><span id="counter">0 / 4 000</span></div>
+            <textarea id="prompt" rows="4" maxlength="4000" required placeholder="Explique-moi quelque chose simplement…"></textarea>
+            <div id="photo-controls" class="photo-controls" hidden>
+              <label class="upload" for="photo">+ Choisir une photo</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only">
+              <span class="file-hint">JPEG, PNG ou WebP · 3 Mo max.</span>
+              <div id="preview" class="preview" hidden><img id="photo-preview" alt="Aperçu de la photo choisie"><span id="photo-name"></span><button id="remove-photo" class="quiet" type="button">Retirer</button></div>
+            </div>
+            <div class="composer-bottom"><span id="mode-hint"><span class="dot"></span> Traitement sur votre serveur</span><div class="send-actions"><button id="cancel" type="button" class="quiet" hidden>Annuler</button><button id="submit" class="primary" type="submit">Demander <span aria-hidden="true">↑</span></button></div></div>
+          </form>
+          <div id="ideas" class="ideas"><span>Pour commencer</span><button type="button" data-example="Explique en deux phrases ce qu’est un arc-en-ciel.">Expliquer une idée ↗</button><button type="button" data-example="Propose trois idées simples pour organiser ma journée.">Trouver une idée ↗</button></div>
+          <section id="result" class="result" hidden aria-labelledby="result-title"><div class="result-heading"><span class="result-star" aria-hidden="true">✦</span><h2 id="result-title">La réponse de votre assistant</h2><button id="copy" class="quiet" type="button">Copier</button></div><div id="answer" class="answer"></div><p id="truncated" class="notice" hidden>Le modèle a atteint sa limite de longueur. Demandez une réponse plus courte.</p><div id="sources-panel" class="sources" hidden><h3>Sources consultées sur Wikipédia</h3><ol id="sources"></ol></div></section>
+        </section>
+
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <div class="bottom-notes"><div><span aria-hidden="true">◈</span> <strong>Sans API d’IA externe</strong><p>Le modèle est hébergé avec votre application.</p></div><div><span aria-hidden="true">◷</span> <strong>À son rythme</strong><p>Petit et limité. Vérifiez ses réponses importantes.</p></div></div>
+      </section>
+      <footer class="main-footer"><span>ALTER EGO <span class="footer-dot">·</span> Petit assistant, grandes intentions.</span><span>Texte & image <span class="footer-dot">/</span> SmolVLM-256M</span></footer>
+    </main>
+  </div>
+</body>
+</html>

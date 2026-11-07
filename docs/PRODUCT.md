@@ -70,3 +70,11 @@ limites. Aucun service payant n’est provisionné par ce cadrage.
 - [Roadmap](ROADMAP.md)
 - [Décisions](DECISIONS.md)
 - [Rôles et règles](../AGENTS.md)
+
+## Première application demandée le 7 novembre 2026
+
+Le propriétaire autorise la création d’un petit assistant texte, photo et
+recherche Internet avec un modèle installé côté serveur, sans API d’IA distante.
+Le premier prototype est décrit dans [LOCAL_MODEL.md](LOCAL_MODEL.md).
+Les critères du catalogue ci-dessus restent un objectif ultérieur ; ils ne
+sont pas présentés comme une application déjà construite.
