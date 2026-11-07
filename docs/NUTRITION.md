@@ -72,8 +72,11 @@ la vérification TLS ni contourner la politique réseau.
 ils utilisent des fiches fictives dans un stockage temporaire. Les essais réels
 sont rapportés séparément, sans prétendre valider toute la base.
 
+La [photo assistée](FOOD_PHOTO.md) propose désormais un nom, corrigible avant
+la recherche. Elle ne déduit ni calories ni portions.
+
 À construire ensuite : Ciqual et USDA, imports plus larges dimensionnés, lecture
-par caméra de codes-barres, reconnaissance alimentaire/OCR par photo, recherche
+par caméra de codes-barres, OCR d’étiquette, recherche
 web générale sourcée. Voir [recherche](research/NUTRITION_RESEARCH.md) et
 [plan](research/NUTRITION_DATA_PLAN.md).
 

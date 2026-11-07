@@ -1,3 +1,4 @@
+import { createFoodPhoto } from './food-photo.js';
 const $ = id => document.getElementById(id);
 const meals = { breakfast: 'Petit-déjeuner', lunch: 'Déjeuner', dinner: 'Dîner', snack: 'Collation' };
 const symbols = { breakfast: '☀', lunch: '◒', dinner: '☾', snack: '✳' };
@@ -11,6 +12,16 @@ let loadController;
 let selectedProduct;
 let searchController;
 let searchId = 0;
+
+const foodPhoto = createFoodPhoto({ request, onCandidate(candidate) {
+  resetSearch({ keepPhoto: true });
+  $('photo-panel').open = false;
+  $('food-name').value = ''; $('food-kcal').value = '';
+  if (draft) draft.preserveNutrition = false;
+  $('food-query').value = candidate;
+  $('search-status').textContent = 'Vérifiez ou corrigez ce nom, puis appuyez sur Rechercher. Aucun aliment n’a été ajouté.';
+  $('food-query').focus();
+} });
 
 function localDate(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -58,6 +69,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
 }
 function setBusy(value) {
   busy = value;
+  foodPhoto.setLocked(value);
   for (const id of ['day', 'previous-day', 'next-day', 'today', 'add-food', 'first-food', 'set-goal', 'reload', 'export', 'save-food', 'save-goal', 'confirm-delete', 'close-food', 'cancel-food', 'close-goal', 'cancel-goal', 'cancel-delete']) $(id).disabled = value;
   document.querySelectorAll('#food-form input, #food-form select, #goal-form input, .row-actions button').forEach(el => { el.disabled = value; });
 }
@@ -238,7 +250,8 @@ async function init() {
 init();
 
 
-function resetSearch() {
+function resetSearch({ keepPhoto = false } = {}) {
+  if (!keepPhoto) foodPhoto.reset();
   searchController?.abort(); searchId++;
   selectedProduct = undefined;
   $('selected-product').hidden = true;

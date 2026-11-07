@@ -54,7 +54,9 @@ partagé. Les exports sont privés et ne doivent pas être ajoutés au dépôt.
 
 Recherche par nom et code-barres saisi disponible avec cache local :
 [NUTRITION.md](NUTRITION.md). Pas encore de lecture de code-barres par caméra,
-photo alimentaire, affichage des macros, import de fichiers ou recommandation d’apport.
+OCR d’étiquette, affichage des macros, import de fichiers ou recommandation d’apport.
+La [photo alimentaire assistée](FOOD_PHOTO.md) propose des noms à vérifier, sans
+estimation énergétique directe ni ajout automatique.
 
 - [Validation](VALIDATION.md)
 - [Architecture](ARCHITECTURE.md)
@@ -64,4 +66,5 @@ photo alimentaire, affichage des macros, import de fichiers ou recommandation d�
 Catalogue étendu, recherche par photo et recherche web nutritionnelle :
 [recherche et priorités](research/NUTRITION_RESEARCH.md),
 [plan de construction](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF est livré ;
-les autres sources, la photo et le web général restent à développer.
+la photo assistée est livrée ; les autres sources, l’OCR et le web général restent
+à développer.

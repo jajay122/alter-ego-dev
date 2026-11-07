@@ -137,3 +137,56 @@ pas d’audit juridique complet de toutes les redistributions possibles.
 
 Contrôles de clôture de cette mise à jour : `npm run check` et `git diff --check`
 réussis ; liens relatifs de 14 documents vérifiés, aucun chemin absent.
+
+## Mise à jour : photo alimentaire assistée — 7 novembre 2026
+
+- `npm test` : **42 tests réussis**, aucun échec ni test ignoré (36 existants et
+  6 nouveaux). Accès privé/origine, validation et taille d’image, consigne serveur,
+  absence de requête externe et d’écriture photo, réponses inutilisables/tronquées,
+  moteur absent/externe, verrou et quota partagés avec l’assistant vérifiés.
+- `npm run check` et `git diff --check` : réussis sur les changements.
+- `PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/photo-browser-check.mjs` : parcours simulé réussi à 360 et
+  1 365 pixels. Envoi explicite, JPEG réduit à 512 pixels, absence d’un marqueur de
+  commentaire JPEG du fichier d’origine dans le contenu envoyé, candidat modifiable,
+  recherche externe explicite, portion confirmée et source dans le journal vérifiés.
+- Ce script vérifie aussi UNKNOWN sans remplacement, panne du modèle puis saisie
+  manuelle, annulation, réponse tardive ignorée, fermeture/réouverture, fichier
+  illisible, retrait de photo et verrouillage. Aucune erreur JavaScript de page ;
+  pas de débordement horizontal. Capture mobile examinée, formulaire défilable.
+- Régression `scripts/calories-browser-check.mjs` réussie : portail, journal,
+  date Paris au passage du jour UTC, persistance après redémarrage, export,
+  correction, suppression et verrouillage. Le premier passage avait interrogé
+  la date avant initialisation du nouveau module ES ; attente de l’interface prête
+  ajoutée, puis date correcte confirmée. Pas de modification du calcul de date.
+- Régression `scripts/nutrition-browser-check.mjs` exécutée séparément, source OFF
+  simulée et stockage temporaire ; voir les résultats de clôture ci-dessous.
+
+### Essais réels du moteur local
+
+Le moteur llama.cpp natif existant a été relancé avec les poids SmolVLM-256M
+installés et le contexte de 2 048 tokens, sans téléchargement de nouveaux poids.
+
+- Photo publique : [Banana-Single.jpg sur Wikimedia](https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg).
+  L’image originale 3 030 × 2 670 a provoqué une réponse HTTP 400 du moteur :
+  2 104 tokens pour un contexte de 2 048. Un premier parcours à 1 024 pixels n’a
+  pas fourni de candidat attendu au navigateur dans son délai. La préparation
+  a été ramenée à 512 pixels sur le grand côté.
+- `PHOTO_REAL_IMAGE=/tmp/alter-ego-photo-banana.jpg PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/photo-browser-check.mjs` :
+  réussi après correction et sur l’interface repliable finale. Photo préparée
+  à 512 × 451, réponse réelle « Banana. », candidat affiché, un appel local et
+  zéro appel catalogue ; aucune erreur JavaScript. Aucun ajout au journal réel.
+- Image synthétique rouge : réponse réelle « The food visible in this photo is
+  not specified, but it is red. ». Le premier filtre avait laissé passer le
+  fragment « but it is red » ; rejet de la phrase entière ajouté et testé.
+  Nouvel essai réel : même réponse, liste de candidats vide. Aucun aliment inventé
+  par le code pour compenser cette réponse inexploitable.
+
+Les essais réels utilisent une image publique et une image synthétique, dans des
+journaux temporaires supprimés ensuite. Images et captures restent hors Git.
+Ces deux cas ne sont pas un benchmark : précision, faux positifs et plats mixtes
+ne sont pas caractérisés. Aucune promesse de mesure de portion, d’énergie ou d’OCR.
+Pas de test Android physique, nouveau build Docker ou déploiement en production.
+
+Clôture : régression du parcours nutritionnel réussie, aucune erreur de page ;
+liens relatifs de 15 documents vérifiés, aucun chemin absent. Analyse syntaxique
+et contrôle du diff réussis après les derniers changements.

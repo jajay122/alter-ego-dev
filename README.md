@@ -24,6 +24,7 @@ le dossier désigné par CALORIES_DATA_DIR.
 - Journée choisie selon la date locale du téléphone.
 - Ajout manuel ou recherche Open Food Facts par nom/code-barres saisi.
 - Quantité en g ou ml confirmée, calories calculées côté serveur et source conservée.
+- Photo facultative : proposition de nom par modèle local, correction puis recherche explicite.
 - Totaux quotidiens et par repas, avec une décimale.
 - Modification et suppression avec confirmation.
 - Objectif quotidien facultatif, saisi par le propriétaire et retirable.
@@ -32,8 +33,8 @@ le dossier désigné par CALORIES_DATA_DIR.
   après une nouvelle tentative et contre les corrections obsolètes d’un autre onglet.
 
 Les valeurs proviennent de la saisie manuelle ou de fiches Open Food Facts
-consultées en ligne et conservées dans un cache SQLite local. Pas encore
-d’estimation alimentaire par photo, de calcul de besoins ou de conseil nutritionnel automatique.
+consultées en ligne et conservées dans un cache SQLite local. La photo sert uniquement à proposer un nom à vérifier ; elle n’estime pas les
+calories ni les portions. Pas de calcul de besoins ou de conseil nutritionnel automatique.
 Aucun objectif n’est imposé. Ce journal enregistre ce que le propriétaire saisit.
 
 ## Stockage
@@ -105,9 +106,14 @@ La [recherche documentée](docs/research/NUTRITION_RESEARCH.md) compare cinq
 applications, Open Food Facts/Ciqual/USDA et des travaux scientifiques. Le
 [plan technique](docs/research/NUTRITION_DATA_PLAN.md) prépare catalogue, photo
 assistée et recherche web sourcée. Le premier connecteur Open Food Facts est implémenté : voir
-[recherche alimentaire](docs/NUTRITION.md). Ciqual, USDA, photo/OCR et recherche
-web générale restent à construire.
+[recherche alimentaire](docs/NUTRITION.md). La [photo assistée](docs/FOOD_PHOTO.md) est disponible avec le moteur local.
+Ciqual, USDA, OCR d’étiquette et recherche web générale restent à construire.
 
 Le parcours nutritionnel se vérifie avec `node scripts/nutrition-browser-check.mjs`
 après installation de Playwright, comme le parcours manuel. La source distante
 y est simulée et les données restent temporaires.
+
+Le script `node scripts/photo-browser-check.mjs` vérifie le parcours photo avec
+un modèle simulé. `PHOTO_REAL_IMAGE=/chemin/photo.jpg` permet l’essai réel
+spécifique d’une photo de banane avec le moteur local démarré. Ces essais utilisent
+un journal temporaire, sans ajout de données au journal réel.

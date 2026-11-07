@@ -2,6 +2,7 @@
 
 > État ultérieur : le connecteur Open Food Facts, le cache SQLite/FTS5 et les
 > portions sourcées sont maintenant implémentés : [état courant](../NUTRITION.md).
+> La photo assistée est aussi disponible : [fonctionnement](../FOOD_PHOTO.md).
 > Les constats de recherche et les autres propositions ci-dessous restent datés.
 
 

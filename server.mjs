@@ -5,6 +5,7 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assistant.mjs';
 import { createCalorieStore } from './lib/calories.mjs';
 import { createNutritionCatalog } from './lib/nutrition.mjs';
+import { validateFoodPhoto, foodCandidates } from './lib/food-photo.mjs';
 
 const staticFiles = new Map([
   ['/', ['portal.html', 'text/html; charset=utf-8']],
@@ -13,6 +14,7 @@ const staticFiles = new Map([
   ['/calories', ['calories.html', 'text/html; charset=utf-8']],
   ['/assistant', ['index.html', 'text/html; charset=utf-8']],
   ['/calories.js', ['calories.js', 'text/javascript; charset=utf-8']],
+  ['/food-photo.js', ['food-photo.js', 'text/javascript; charset=utf-8']],
   ['/calories.css', ['calories.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
@@ -116,7 +118,7 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       const calorieMutation = (path === '/api/calories/entries' && req.method === 'POST')
         || (path === '/api/calories/goal' && req.method === 'PUT')
         || (entryPath && ['PUT', 'DELETE'].includes(req.method));
-      if (!calorieMutation && (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist'].includes(path))) {
+      if (!calorieMutation && (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist', '/api/nutrition/photo'].includes(path))) {
         throw new AppError(404, 'NOT_FOUND', 'Cette page n’existe pas.');
       }
       const origin = config.origin || `http://${req.headers.host}`;
@@ -160,7 +162,9 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         return json(200, await calorieStore.remove(entryPath[1], body.version));
       }
       if (busy) throw new AppError(429, 'BUSY', 'Une tâche est déjà en cours. Attends sa fin.');
-      const input = validateInput(await readJson(req, 4_300_000));
+      const photoSearch = path === '/api/nutrition/photo';
+      const body = await readJson(req, 4_300_000);
+      const input = photoSearch ? validateFoodPhoto(body) : validateInput(body);
       while (calls.length && calls[0] < now - 60 * 60_000) calls.shift();
       if (calls.length >= 20) throw new AppError(429, 'LOCAL_LIMIT', 'La limite locale de 20 demandes par heure est atteinte.');
       // Cette seconde vérification couvre deux requêtes ayant lu leur corps simultanément.
@@ -171,6 +175,7 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       try {
         calls.push(Date.now());
         const result = await askLocalModel(input, config, fetchImpl, abort.signal);
+        if (photoSearch) return json(200, { candidates: foodCandidates(result.answer, result.truncated), truncated: result.truncated });
         return json(200, { answer: result.answer, sources: result.sources, truncated: result.truncated });
       } finally { busy = false; }
     } catch (error) {

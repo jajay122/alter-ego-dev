@@ -157,6 +157,23 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** [fonctionnement](NUTRITION.md), [validation](VALIDATION.md),
   tests unitaires/HTTP, navigateur simulé et deux lectures publiques réelles.
 
+## ADR-011 — Photo pour proposer des noms, confirmation avant recherche
+
+- **Date :** 2026-11-07.
+- **Statut :** prototype implémenté, tests et essais réels ponctuels effectués.
+- **Décision :** réutiliser SmolVLM local pour proposer des noms corrigibles ;
+  aucune énergie ni quantité déduite par IA. Recherche OFF et ajout restent explicites.
+- **Traitement :** JPEG de 512 pixels préparé sur téléphone, limites de taille,
+  aperçus temporaires révoqués à la fermeture, aucune photo enregistrée par le code.
+- **Alternatives :** modèle distant écarté selon la préférence du propriétaire ;
+  image originale écartée après dépassement constaté du contexte de 2 048 tokens ;
+  estimation automatique écartée pour la fiabilité et l’absence de benchmark.
+- **Conséquences :** noms parfois anglais, propositions parfois absentes ou fausses,
+  absence d’OCR et de mesure des portions. Le filtre de texte n’est pas un détecteur
+  alimentaire fiable. Quota/verrou d’inférence partagés ; saisie manuelle indépendante.
+- **Preuves :** [fonctionnement](FOOD_PHOTO.md), [validation](VALIDATION.md),
+  photo de banane et image rouge synthétique ; aucun taux de précision annoncé.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown

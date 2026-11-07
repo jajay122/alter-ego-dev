@@ -42,6 +42,7 @@ try {
   if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Portal mobile overflow');
   await page.screenshot({ path: join(root, 'artifacts/portal-mobile.png'), fullPage: true });
   await page.locator('.app-open[href="/calories"]').click();
+  await page.locator('#password:not([disabled])').waitFor();
   if (await page.locator('#day').inputValue() !== '2026-11-08') throw new Error('Calendar uses UTC instead of local day');
   async function login() {
     await page.locator('#password:not([disabled])').waitFor();
