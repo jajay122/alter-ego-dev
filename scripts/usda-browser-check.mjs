@@ -1,0 +1,60 @@
+import { randomBytes } from 'node:crypto';
+import { copyFile, mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createApp } from '../server.mjs';
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const root = fileURLToPath(new URL('../', import.meta.url));
+const dir = await mkdtemp(join(tmpdir(), 'alter-ego-usda-browser-'));
+let browser; let server;
+try {
+  // Copy only the public reference catalogue, never a personal journal.
+  await copyFile(process.env.USDA_TEST_DATABASE || join(root, '.data/usda.sqlite'), join(dir, 'usda.sqlite'));
+  const password = randomBytes(24).toString('hex'); let externalCalls = 0;
+  server = createApp({ config: { dataDir: dir, password, origin: '' }, fetchImpl: async () => { externalCalls++; throw new Error('External request forbidden during local test'); } });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+  const page = await browser.newPage({ viewport: { width: 360, height: 800 }, locale: 'fr-FR' });
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
+  await page.goto(base + '/calories'); await page.locator('#password:not([disabled])').waitFor();
+  await page.locator('#password').fill(password); await page.locator('#login-submit').click();
+  await page.locator('#journal:not([hidden])').waitFor(); await page.locator('#add-food').click();
+  await page.locator('#food-source').selectOption('usda');
+  if (!await page.locator('#local-search-choice').isHidden()) throw new Error('Local source still offers network checkbox');
+  await page.locator('#food-query').fill('banana'); await page.locator('#search-food').click();
+  await page.getByRole('button', { name: 'Choisir Bananas, raw', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Choisir Bananas, raw', exact: true }).click();
+  if (!await page.locator('#portion-unit option[value=ml]').isDisabled()) throw new Error('USDA permits ml');
+  await page.locator('#portion-quantity').fill('125'); await page.locator('#portion-unit').selectOption('g');
+  if (await page.locator('#food-kcal').inputValue() !== '111.3') throw new Error('Wrong banana portion');
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth || document.getElementById('food-dialog').scrollWidth > document.getElementById('food-dialog').clientWidth)) throw new Error('Mobile overflow');
+  await mkdir(join(root, 'artifacts'), { recursive: true });
+  await page.screenshot({ path: join(root, 'artifacts/usda-mobile.png'), fullPage: true });
+  await page.locator('#save-food').click(); await page.locator('#food-dialog').waitFor({ state: 'hidden' });
+  await page.waitForFunction(() => document.getElementById('total').textContent === '111,3');
+  await page.locator('.entry-source').waitFor();
+  if (!/USDA SR Legacy 2018-04/.test(await page.locator('.entry-source').textContent())) throw new Error('Wrong provider attribution');
+  await page.reload(); await page.locator('.entry-source').waitFor();
+  await page.getByRole('button', { name: 'Modifier Bananas, raw', exact: true }).click();
+  await page.locator('#food-meal').selectOption('dinner'); await page.locator('#save-food').click();
+  await page.locator('#food-dialog').waitFor({ state: 'hidden' }); await page.locator('.entry-source').waitFor();
+  const exported = await page.evaluate(async () => (await fetch('/api/calories/export')).json());
+  if (exported.entries.length !== 1 || exported.entries[0].nutrition.provider !== 'usda' || exported.entries[0].nutrition.kcalPer100 !== 89) throw new Error('Lost nutrient snapshot');
+  await page.locator('#add-food').click(); await page.locator('#food-source').selectOption('usda');
+  await page.locator('#food-query').fill('zzzznotanactualfood'); await page.locator('#search-food').click();
+  await page.waitForFunction(() => document.getElementById('search-status').textContent.includes('Aucun produit'));
+  await page.locator('#food-source').selectOption('openfoodfacts');
+  if (!await page.locator('#local-search-choice').isVisible()) throw new Error('OFF controls not restored');
+  await page.locator('#food-source').selectOption('usda'); await page.locator('#food-query').fill('rice cooked'); await page.locator('#search-food').click();
+  await page.waitForFunction(() => document.querySelectorAll('#search-results li').length > 0);
+  await page.setViewportSize({ width: 1365, height: 1000 });
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Desktop overflow');
+  await page.screenshot({ path: join(root, 'artifacts/usda-desktop.png'), fullPage: true });
+  await page.locator('#cancel-food').click(); await page.locator('#logout').click(); await page.locator('#login-panel:not([hidden])').waitFor();
+  if (externalCalls || errors.length) throw new Error(JSON.stringify({ externalCalls, errors }));
+  console.log(JSON.stringify({ catalogue: 'real USDA reference copy', widths: [360, 1365], rawBananaKcalPer100: 89,
+    portion125g: 111.3, noMlConversion: true, sourceVersionAndExport: true, snapshotAfterReload: true,
+    noResultsState: true, sourceSwitch: true, cookedRiceSearch: true, externalCalls, pageErrors: errors }));
+} finally { await browser?.close(); if (server) await new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }); await rm(dir, { recursive: true, force: true }); }

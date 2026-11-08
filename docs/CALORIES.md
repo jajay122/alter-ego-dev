@@ -66,5 +66,11 @@ estimation énergétique directe ni ajout automatique.
 Catalogue étendu, recherche par photo et recherche web nutritionnelle :
 [recherche et priorités](research/NUTRITION_RESEARCH.md),
 [plan de construction](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF est livré ;
-la photo assistée est livrée ; les autres sources, l’OCR et le web général restent
-à développer.
+la photo assistée et USDA local sont livrés ; Ciqual, l’OCR et le web général
+restent à développer.
+
+## Catalogue local complémentaire
+
+[USDA](USDA.md) complète désormais OFF avec deux exports importables sans clé API.
+Noms anglais, base 100 g uniquement, source et version dans le journal ; les
+50 fiches sans énergie de l’import vérifié restent signalées comme incomplètes.

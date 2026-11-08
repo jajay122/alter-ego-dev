@@ -7,7 +7,8 @@ La saisie manuelle reste disponible sans source externe ni modèle IA.
 
 ## Source et confidentialité
 
-Seul Open Food Facts est actuellement connecté, en lecture publique sans clé.
+Open Food Facts est connecté en lecture publique sans clé. Un second choix
+permet la recherche hors ligne dans le [catalogue USDA importé](USDA.md).
 Les résultats montrent marque, code, valeur pour 100 g/100 ml et date de consultation.
 Un lien vers la fiche accompagne la sélection et l’entrée enregistrée. Attribution
 Open Food Facts/ODbL affichée ; aucune image produit copiée. Une fiche peut être
@@ -60,7 +61,8 @@ pour modifier sa portion avec une source. L’export JSON contient l’instantan
   permettent de conserver les anciens calculs même sans cache.
 
 Node 24 fournit SQLite nativement ; son API est encore candidate à stabilisation
-selon la documentation consultée. Aucun paquet npm de production ajouté.
+selon la documentation consultée. Aucun paquet npm de production ajouté. Le catalogue USDA utilise un fichier
+SQLite séparé, sans la limite d’éviction du cache OFF.
 Dans un environnement imposant un proxy, Node peut nécessiter l’activation de
 son support de proxy hérité (utilisé ici pour les essais réels). Ne pas désactiver
 la vérification TLS ni contourner la politique réseau.
@@ -75,7 +77,7 @@ sont rapportés séparément, sans prétendre valider toute la base.
 La [photo assistée](FOOD_PHOTO.md) propose désormais un nom, corrigible avant
 la recherche. Elle ne déduit ni calories ni portions.
 
-À construire ensuite : Ciqual et USDA, imports plus larges dimensionnés, lecture
+À construire ensuite : Ciqual, imports plus larges dimensionnés, lecture
 par caméra de codes-barres, OCR d’étiquette, recherche
 web générale sourcée. Voir [recherche](research/NUTRITION_RESEARCH.md) et
 [plan](research/NUTRITION_DATA_PLAN.md).

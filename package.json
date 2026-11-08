@@ -1,6 +1,6 @@
 {
   "name": "alter-ego-assistant",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -10,9 +10,10 @@
     "start": "node --env-file-if-exists=.env.local server.mjs",
     "dev": "node --watch --env-file-if-exists=.env.local server.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs && node --check public/portal.js && node --check lib/nutrition.mjs && node --check scripts/nutrition-browser-check.mjs && node --check lib/food-photo.mjs && node --check public/food-photo.js && node --check scripts/photo-browser-check.mjs",
+    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs && node --check public/portal.js && node --check lib/nutrition.mjs && node --check scripts/nutrition-browser-check.mjs && node --check lib/food-photo.mjs && node --check public/food-photo.js && node --check scripts/photo-browser-check.mjs && node --check lib/usda.mjs && node --check lib/usda-import.mjs && node --check scripts/import-usda.mjs && node --check scripts/usda-browser-check.mjs",
     "model:install": "node scripts/install-model.mjs",
     "model:start": "node scripts/model-service.mjs start",
-    "model:stop": "node scripts/model-service.mjs stop"
+    "model:stop": "node scripts/model-service.mjs stop",
+    "nutrition:import:usda": "node --env-file-if-exists=.env.local scripts/import-usda.mjs"
   }
 }

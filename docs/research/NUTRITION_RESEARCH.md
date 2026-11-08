@@ -3,6 +3,7 @@
 > État ultérieur : le connecteur Open Food Facts, le cache SQLite/FTS5 et les
 > portions sourcées sont maintenant implémentés : [état courant](../NUTRITION.md).
 > La photo assistée est aussi disponible : [fonctionnement](../FOOD_PHOTO.md).
+> Le catalogue USDA local est maintenant livré : [état au 8 novembre](../USDA.md).
 > Les constats de recherche et les autres propositions ci-dessous restent datés.
 
 

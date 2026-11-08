@@ -190,3 +190,57 @@ Pas de test Android physique, nouveau build Docker ou déploiement en production
 Clôture : régression du parcours nutritionnel réussie, aucune erreur de page ;
 liens relatifs de 15 documents vérifiés, aucun chemin absent. Analyse syntaxique
 et contrôle du diff réussis après les derniers changements.
+
+## Mise à jour : catalogue USDA local — 8 novembre 2026
+
+### Données et import réellement vérifiés
+
+- Sous-site Ciqual consulté à nouveau : maintenance, pas d’import Ciqual déclaré.
+- Exports officiels USDA téléchargés et contrôlés. Foundation CSV reçu ne contenait
+  pas les tables food/food_nutrient attendues ; Foundation JSON complet utilisé.
+- Import réel local réussi via `node scripts/import-usda.mjs /tmp/alter-ego-usda-foundation-json.zip /tmp/alter-ego-usda-legacy.zip` :
+  **8 217 fiches**, dont **8 167 avec énergie**, 424 Foundation 2026-10-29 et
+  7 793 SR Legacy 2018-04. Base SQLite d’environ 6,5 Mio, privée et hors Git.
+- Chemin de téléchargement automatique également vérifié avec
+  `NODE_USE_ENV_PROXY=1` et `CALORIES_DATA_DIR` désignant un dossier temporaire :
+  deux téléchargements HTTPS publics, SHA-256 et import réussis, même total de
+  8 217 fiches. Dossier de cet essai supprimé ensuite ; aucun journal réel utilisé.
+- Empreintes observées sur archives officielles, figées dans le manifeste :
+  Foundation JSON `dd414cc9f1a132626bad354ef6655972c78b44aff14f16114dc899708663c579` ;
+  SR Legacy CSV `b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0`.
+  Il ne s’agit pas de signatures USDA publiées.
+
+### Tests et parcours
+
+- `npm test` : **49 tests réussis**, aucun échec ni test ignoré (42 existants,
+  7 nouveaux). CSV avec guillemets/virgules/retours ligne, ZIP/hash, normalisation
+  unités/méthode énergétique/absences, import atomique, permissions 0600, catalogue
+  incomplet, cache absent/corrompu, grammes seuls, réimport et API privée vérifiés.
+- Les fixtures unitaires sont synthétiques, distinctes du vrai catalogue. La
+  recherche et l’ajout USDA dans le test HTTP n’appellent aucune source externe.
+- `PLAYWRIGHT_MODULE=/tmp/alter-ego-browser/node_modules/playwright/index.mjs node scripts/usda-browser-check.mjs` : réussi avec copie du catalogue public réel
+  dans un dossier temporaire. Chromium à 360 et 1 365 pixels ; recherche banana,
+  choix exact « Bananas, raw », 89 kcal/100 g, 125 g → 111,3 kcal ; ml désactivés,
+  provenance USDA/version/CC0, rechargement, changement de repas, export, état vide,
+  changement de source et recherche rice cooked vérifiés. Zéro appel externe et
+  aucune erreur de page. Capture mobile examinée.
+- Les premiers parcours mobiles USDA/OFF ont détecté un débordement du nouveau
+  sélecteur natif. Largeur maximale et largeur minimale corrigées, puis les deux
+  scripts relancés avec succès ; aucun débordement horizontal après correction.
+- Régressions Chromium `scripts/nutrition-browser-check.mjs`,
+  `scripts/calories-browser-check.mjs` et `scripts/photo-browser-check.mjs` réussies.
+  Les fournisseurs OFF/IA sont simulés dans ces essais ; le journal temporaire
+  est supprimé à la fin. Aucun nouveau benchmark du modèle n’est revendiqué.
+- `npm run check` et `git diff --check` réussis après les changements.
+
+### Limites
+
+Pas d’import Ciqual, USDA Branded/FNDDS ou catalogue mondial complet. Noms USDA
+anglais et collection SR Legacy historique ; recouvrements possibles entre fiches.
+50 valeurs énergétiques absentes conservées comme telles. Pas de test Android
+physique, de nouvelle construction Docker ou de déploiement en production.
+Le catalogue importé dans l’environnement de travail n’est pas embarqué dans
+Git ni dans l’image Docker : l’import doit être exécuté sur le volume cible.
+
+Contrôle documentaire de clôture : liens relatifs de 16 documents vérifiés,
+aucun chemin absent ; aucune base, archive, capture ou donnée privée ajoutée à Git.

@@ -174,6 +174,30 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** [fonctionnement](FOOD_PHOTO.md), [validation](VALIDATION.md),
   photo de banane et image rouge synthétique ; aucun taux de précision annoncé.
 
+## ADR-012 — Compléter OFF avec deux exports USDA locaux
+
+- **Date :** 2026-11-08.
+- **Statut :** implémenté, import réel et tests effectués ; aucun déploiement.
+- **Contexte :** besoin d’aliments génériques et d’une couverture plus large,
+  sans clé API ; sous-site Ciqual encore en maintenance.
+- **Décision :** catalogue USDA séparé, Foundation JSON 2026-10-29 et SR Legacy CSV
+  2018-04, CC0, noms anglais conservés. Deux SHA-256 observés sur exports officiels,
+  contrôle ZIP/CRC/schéma et remplacement atomique après validation complète.
+- **Calcul :** base 100 g seulement ; priorité aux kcal Atwater spécifiques (2048),
+  puis générales (2047), puis historiques (1008). Conserver la méthode choisie dans
+  chaque instantané ; pas de moyenne ni de densité inventée.
+- **Alternatives :** API USDA avec clé évitée grâce aux exports ; base mondiale
+  Branded volumineuse différée. L’export Foundation CSV consulté ne contenait pas
+  les tables food/food_nutrient attendues ; export JSON complet utilisé à la place.
+- **Conséquences :** environ 6,5 Mio dans l’import vérifié, recherche locale sans
+  quota fournisseur. 8 217 fiches, dont 8 167 avec énergie ; recouvrements possibles,
+  pas un total d’aliments uniques. Une mise à jour ne modifie pas les anciens repas.
+- **Compatibilité :** anciennes entrées préservées ; une version serveur antérieure
+  ne sait pas nécessairement lire des instantanés USDA. Sauvegarde coordonnée requise
+  pour un retour arrière. Aucun import automatique au démarrage.
+- **Preuves :** [fonctionnement](USDA.md), [validation](VALIDATION.md), tests
+  d’archives et parcours Chromium avec copie du catalogue public réel.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown
