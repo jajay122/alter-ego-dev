@@ -11,6 +11,9 @@ l’objet d’une recherche et d’un plan de construction. Le premier connecteu
 Open Food Facts, son cache local et les portions sourcées sont implémentés. La
 photo assistée propose un nom à vérifier, sans estimation calorique automatique.
 Un catalogue USDA local complète OFF, avec import contrôlé et provenance figée.
+La lecture web de recettes conserve source et portion explicites. L’aperçu mobile
+Sites version 1 a été publié après autorisation du propriétaire ; ses données
+restent dans le navigateur, séparées du serveur et du modèle locaux.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement

@@ -6,6 +6,7 @@ import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assis
 import { createCalorieStore } from './lib/calories.mjs';
 import { createNutritionCatalog } from './lib/nutrition.mjs';
 import { createUsdaCatalog } from './lib/usda.mjs';
+import { createWebNutrition } from './lib/web-nutrition.mjs';
 import { validateFoodPhoto, foodCandidates } from './lib/food-photo.mjs';
 
 const staticFiles = new Map([
@@ -61,6 +62,7 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
   const calorieStore = createCalorieStore(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
   const nutritionCatalog = createNutritionCatalog(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)), { fetchImpl });
   const usdaCatalog = createUsdaCatalog(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
+  const webNutrition = createWebNutrition(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)), { fetchImpl });
   const sessions = new Map();
   const loginAttempts = new Map();
   const calls = [];
@@ -123,7 +125,7 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       const calorieMutation = (path === '/api/calories/entries' && req.method === 'POST')
         || (path === '/api/calories/goal' && req.method === 'PUT')
         || (entryPath && ['PUT', 'DELETE'].includes(req.method));
-      if (!calorieMutation && (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist', '/api/nutrition/photo'].includes(path))) {
+      if (!calorieMutation && (req.method !== 'POST' || !['/api/login', '/api/logout', '/api/assist', '/api/nutrition/photo', '/api/nutrition/web'].includes(path))) {
         throw new AppError(404, 'NOT_FOUND', 'Cette page n’existe pas.');
       }
       const origin = config.origin || `http://${req.headers.host}`;
@@ -156,13 +158,17 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         res.setHeader('Set-Cookie', sessionCookie('', 0));
         return json(200, { authenticated: false });
       }
+      if (path === '/api/nutrition/web') {
+        const body = await readJson(req, 2048);
+        return json(200, await webNutrition.read(body?.url));
+      }
       if (calorieMutation) {
         const body = await readJson(req, 4096);
         if (!body || typeof body !== 'object' || Array.isArray(body)) throw new AppError(400, 'INVALID_ENTRY', 'Le format de cette entrée est invalide.');
         if ('nutrition' in body) throw new AppError(400, 'INVALID_NUTRITION', 'Choisis une fiche dans la recherche ou utilise la saisie manuelle.');
         if (body.catalogPortion && (path === '/api/calories/entries' || (entryPath && req.method === 'PUT'))) {
-          if (body.catalogPortion.provider && !['openfoodfacts', 'usda'].includes(body.catalogPortion.provider)) throw new AppError(400, 'INVALID_PROVIDER', 'Source alimentaire invalide.');
-          Object.assign(body, body.catalogPortion.provider === 'usda' ? usdaCatalog.portion(body.catalogPortion) : await nutritionCatalog.portion(body.catalogPortion));
+          if (body.catalogPortion.provider && !['openfoodfacts', 'usda', 'web'].includes(body.catalogPortion.provider)) throw new AppError(400, 'INVALID_PROVIDER', 'Source alimentaire invalide.');
+          Object.assign(body, body.catalogPortion.provider === 'web' ? webNutrition.portion(body.catalogPortion) : body.catalogPortion.provider === 'usda' ? usdaCatalog.portion(body.catalogPortion) : await nutritionCatalog.portion(body.catalogPortion));
         }
         if (path === '/api/calories/entries') return json(201, await calorieStore.add(body));
         if (path === '/api/calories/goal') return json(200, await calorieStore.setGoal(body.goal));

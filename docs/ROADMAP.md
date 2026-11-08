@@ -10,7 +10,9 @@
 - Catalogue USDA local : Foundation et SR Legacy, 8 217 fiches dans l’import vérifié.
 - Photo alimentaire assistée, corrigible avant recherche explicite et portion confirmée.
 - Assistant local facultatif texte/photo/Wikipédia ; aucune API d’IA distante.
-- Dix responsabilités de collaboration et règles Git ; pas de production déployée.
+- Lecture web de recettes compatibles, portion explicite et provenance conservée.
+- Aperçu mobile privé version 1 publié avec approbation ; journal sur appareil.
+- Serveur Node/IA local non déployé en production ; dix responsabilités de collaboration.
 
 ## Prochaine construction : module nutrition
 
@@ -28,7 +30,7 @@ La photo assistée est branchée ; Ciqual, OCR d’étiquette et web général r
 | Livré (OFF) | Recherche texte et code-barres saisi, portions en g/ml. | Calcul serveur et instantané vérifiés ; scanner caméra non livré. |
 | Prototype livré | Photo assistée. | Parcours et essais ponctuels vérifiés ; benchmark alimentaire à réaliser, précision non établie. |
 | P1 | OCR d’étiquette local. | Valeurs et unités sourcées puis confirmées ; aucun ajout automatique. |
-| P1 | Recherche web des valeurs énergétiques. | Page source, URL, date et base de portion vérifiées ; quotas et protections réseau testés. |
+| Prototype livré (Node) | Lecture web de recettes compatibles. | Ouverture de recherche, URL explicite, portion sourcée, contrôles et instantané vérifiés ; autres formats à étendre. |
 | P2 | Recettes pesées, favoris, duplication, macros/fibres/sel. | Calcul de rendement et couverture explicites ; pas de valeur manquante remplacée par zéro. |
 | P2 | Bilan hebdomadaire et rappels facultatifs. | Journées complètes distinguées des absences ; aucune promesse médicale. |
 | P2 | Fiches administrables des prochaines applications. | Ajout/modification privés, liens réels, navigation Android vérifiée. |

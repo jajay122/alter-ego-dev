@@ -6,7 +6,8 @@ La première application est un journal privé de suivi de calories. Le petit
 assistant texte, photo et recherche d’encyclopédie reste disponible à côté. Un portail sur / regroupe les deux applications ; les fiches sont statiques,
 pas encore administrables. Le périmètre général est décrit dans
 [PRODUCT.md](PRODUCT.md). Aucune API d’IA externe ni base distante n’est requise
-pour la saisie manuelle ; le connecteur OFF utilise Internet. Aucun déploiement en production effectué.
+pour la saisie manuelle ; le connecteur OFF utilise Internet. Le serveur Node/IA n’est pas déployé en production ; un aperçu privé Sites
+séparé est publié, décrit en fin de document.
 
 ## Composants
 
@@ -31,6 +32,7 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 | GET / | Portail des applications. | Aucun journal personnel dans le HTML. |
 | GET /calories | Interface de verrouillage du suivi. | Journal lu seulement après authentification. |
 | GET /assistant | Interface de l’assistant existant. | Session commune pour les opérations privées. |
+| POST /api/nutrition/web | Lecture d’une page nutritionnelle autorisée. | Session, origine, domaine et chemin fixes, taille/délai/quota, aucune redirection. |
 | POST /api/nutrition/photo | Propositions de noms par vision locale. | Session, origine, validation image, verrou et quota partagés avec l’assistant. |
 | GET /api/nutrition/search?source=...&q=... | OFF en ligne/cache, ou USDA local en lecture seule. | Session obligatoire, entrée bornée, quotas persistants. |
 | GET /api/session | État de session sans appel au modèle. | Aucun contenu personnel. |
@@ -112,3 +114,11 @@ Les recherches sont locales avec FTS5 ; les instantanés précisent fournisseur,
 version, archive et méthode énergétique. Une ancienne version limitée aux
 instantanés OFF peut refuser un journal contenant désormais USDA : conserver
 une sauvegarde coordonnée du journal et du code avant un retour arrière.
+
+## Accès mobile et sources web
+
+Un [aperçu privé Sites](MOBILE_PREVIEW.md) distinct a été publié après validation
+humaine de sa version 1. Son journal est stocké dans le navigateur ; il ne déploie
+pas le serveur Node ni llama.cpp. La [lecture web nutritionnelle](WEB_NUTRITION.md)
+est implémentée dans Node avec un fichier web-nutrition.sqlite distinct et des
+instantanés par portion ; elle ne fait pas partie de cet aperçu statique publié.

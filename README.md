@@ -4,6 +4,14 @@ L’accueil regroupe vos applications : suivi calories sur /calories et petit
 assistant local sur /assistant. Le suivi est un module du SaaS, pas le SaaS entier.
 Le journal permet de noter les portions et de retrouver ses entrées après redémarrage.
 
+## Voir sur téléphone
+
+[Aperçu privé du portail](https://alter-ego-apercu-mobile-20261108.jay789456.chatgpt.site) ·
+[Application calories](https://alter-ego-apercu-mobile-20261108.jay789456.chatgpt.site/calories/).
+Connexion avec le même compte ChatGPT. Cet aperçu version 1 conserve le journal
+sur cet appareil ; IA, OFF et lecture web serveur n’y sont pas reliés.
+Voir [les limites et la publication approuvée](docs/MOBILE_PREVIEW.md).
+
 ## Démarrage local
 
 Prérequis pour le suivi : Node.js 24. Aucun paquet npm, modèle IA ou compte
@@ -22,6 +30,7 @@ le dossier désigné par CALORIES_DATA_DIR.
 ## Fonctionnalités
 
 - Journée choisie selon la date locale du téléphone.
+- Lecture de recettes web compatibles avec source, portion et confirmation.
 - Ajout manuel, recherche Open Food Facts par nom/code-barres saisi et catalogue USDA local.
 - Quantité en g ou ml confirmée, calories calculées côté serveur et source conservée.
 - Photo facultative : proposition de nom par modèle local, correction puis recherche explicite.
@@ -109,8 +118,9 @@ applications, Open Food Facts/Ciqual/USDA et des travaux scientifiques. Le
 assistée et recherche web sourcée. Le premier connecteur Open Food Facts est implémenté : voir
 [recherche alimentaire](docs/NUTRITION.md). La [photo assistée](docs/FOOD_PHOTO.md) est disponible avec le moteur local.
 Le [catalogue USDA local](docs/USDA.md) est également disponible après import :
-`npm run nutrition:import:usda`. Ciqual, OCR d’étiquette et recherche web générale
-restent à construire.
+`npm run nutrition:import:usda`. La [lecture web sourcée](docs/WEB_NUTRITION.md) est implémentée sur le serveur,
+avec découverte manuelle puis lecture de pages compatibles. Ciqual, OCR et
+davantage de sources restent à construire.
 
 Le parcours nutritionnel se vérifie avec `node scripts/nutrition-browser-check.mjs`
 après installation de Playwright, comme le parcours manuel. La source distante
