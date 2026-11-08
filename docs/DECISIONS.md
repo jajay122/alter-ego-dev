@@ -198,6 +198,43 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** [fonctionnement](USDA.md), [validation](VALIDATION.md), tests
   d’archives et parcours Chromium avec copie du catalogue public réel.
 
+## ADR-013 — Aperçu mobile privé distinct du serveur
+
+- **Date :** 2026-11-08.
+- **Statut :** version 1 publiée après autorisation humaine explicite.
+- **Contexte :** le propriétaire demande à voir le SaaS et le suivi sur téléphone.
+  Relais local Sites indisponible ; tunnel Cloudflare direct sans connexion.
+- **Décision :** Site privé réservé au propriétaire, écrans issus des fichiers
+  publics, adaptateur journal localStorage et catalogue USDA public en JSON.
+  Pas de données personnelles ni de moteur exposé dans cet aperçu.
+- **Validation humaine :** « Publier cet aperçu privé », pour version 1, domaine
+  exact, stockage sur téléphone et IA non reliée. Sites classe sa publication
+  comme production ; cette validation satisfait la règle de ce dépôt.
+- **Conséquences :** vue utilisable du portail/journal, sans synchronisation entre
+  appareils, OFF, IA ou lecture web serveur. Journal exportable ; serveur Node
+  complet toujours séparé. Aucun compte de tiers ajouté à l’accès.
+- **Preuves :** [liens, version et limites](MOBILE_PREVIEW.md), adaptateur vérifié
+  avec Node et publication native Sites terminée en succeeded. Pas de QA navigateur
+  hébergé faute d’outil de bureau supporté disponible.
+
+## ADR-014 — Lire une page nutritionnelle après sélection humaine
+
+- **Date :** 2026-11-08.
+- **Statut :** implémenté et vérifié dans Node, non relié à l’aperçu statique.
+- **Décision :** découverte de recettes par ouverture explicite d’une recherche
+  navigateur ; lecture serveur d’un lien HTTPS sur trois domaines autorisés.
+  Extraire seulement une énergie et une portion exploitables, puis confirmation.
+- **Alternatives :** API de recherche payante, collecte libre d’URL et extraction
+  calorique par LLM écartées pour coût, sécurité et fiabilité.
+- **Référence :** JSON-LD Recipe/NutritionInformation, portion explicite ; pour
+  Good Food seulement, texte « Nutrition: Per serving » et rendement non ambigu.
+  Aucune conversion implicite vers 100 g ou estimation de quantité.
+- **Conséquences :** formats et éditeurs limités ; sites parfois inaccessibles,
+  valeurs d’auteur non vérifiées par une mesure indépendante. Source, date et
+  portion figées dans le journal ; aucune licence ouverte supposée.
+- **Preuves :** [fonctionnement](WEB_NUTRITION.md), [validation](VALIDATION.md),
+  essai réel Good Food 348 kcal par portion et tests synthétiques des refus.
+
 ## Modèle pour les prochaines décisions
 
 ```markdown

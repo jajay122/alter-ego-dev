@@ -39,3 +39,11 @@ sur demande. Un volume journal-data est monté dans /app/.data pour conserver le
 journal malgré les redémarrages et mises à jour de conteneur. Ne pas supprimer
 ce volume ni exécuter down -v sans sauvegarde et décision explicite du propriétaire.
 Le volume est privé ; prévoir une sauvegarde avant mise à jour.
+
+## Aperçu mobile privé publié le 8 novembre 2026
+
+Le [Site version 1](MOBILE_PREVIEW.md) est accessible sur téléphone après
+autorisation humaine explicite. Il sert d’aperçu interactif avec stockage du
+journal dans le navigateur. Il ne fournit pas l’hébergement permanent du serveur
+Node/llama.cpp. Le relais intégré était absent et le tunnel direct n’a pas abouti ;
+aucun de ces deux accès n’est présenté comme disponible.

@@ -244,3 +244,68 @@ Git ni dans l’image Docker : l’import doit être exécuté sur le volume cib
 
 Contrôle documentaire de clôture : liens relatifs de 16 documents vérifiés,
 aucun chemin absent ; aucune base, archive, capture ou donnée privée ajoutée à Git.
+
+## Mise à jour : aperçu mobile publié et lecture web — 8 novembre 2026
+
+### Accès mobile effectivement publié
+
+- Relais intégré : `sites-preview status` a indiqué une absence du relais.
+- Cloudflared officiel 2026.10.7 téléchargé et SHA-256 comparé au digest de sa
+  publication GitHub. Essai Quick Tunnel : connexion refusée lors de la création
+  via api.trycloudflare.com. Aucun tunnel présenté comme disponible.
+- Solution Sites préparée dans un dossier neuf distinct, audience lue via API :
+  propriétaire seul, aucun groupe ni visiteur externe. Version 1 sauvegardée avec
+  son archive et son commit poussés ; aucun modèle, clé ou journal privé inclus.
+- Adaptateur local du Site vérifié par `node check-preview.mjs` dans son dossier :
+  état vide sans objectif, recherche USDA, portion 125 g à 111,3 kcal, ajout
+  idempotent, modification, source conservée, repère, export et suppression.
+- Un premier contrôle de recherche de l’adaptateur a montré que le tri ne
+  remontait pas la banane crue parmi les premiers résultats ; tri ajusté puis
+  contrôle complet réussi. Aucun jeu de données d’essai livré dans le journal.
+- Publication autorisée par réponse humaine explicite sur la version 1, domaine
+  et limites. Déploiement natif Sites terminé en `succeeded`, URL exacte :
+  https://alter-ego-apercu-mobile-20261108.jay789456.chatgpt.site .
+- Pas de navigateur Sites lancé : environnement Sites géré, outil de bureau
+  supporté absent ; ce workflow demande alors de ne pas improviser un autre
+  contrôle navigateur. Publication confirmée par Sites, rendu hébergé non testé
+  physiquement sur Android. Le journal de l’aperçu est local au navigateur ;
+  OFF, IA et lecture web serveur n’y sont pas reliés.
+
+### Lecture web dans l’application Node
+
+- `npm test` : **55 tests réussis**, aucun échec ni test ignoré (49 existants et
+  6 nouveaux). URL limitée, identifiants/ports/domaines suspects refusés,
+  extraction JSON-LD, absence de portion/ambiguïté, taille/type/erreur réseau,
+  quotas, historique figé et endpoint privé vérifiés.
+- Essai réel avec `NODE_USE_ENV_PROXY=1`, dossier temporaire supprimé ensuite :
+  https://www.bbcgoodfood.com/recipes/overnight-oats → « Overnight oats »,
+  348 calories, marqueur visible « Nutrition: Per serving », recette pour une
+  portion. Le serveur a calculé 348 kcal pour une portion, sans appel modèle.
+- Le premier parseur perdait les espaces entre balises et ne détectait pas le
+  marqueur ; séparation textuelle corrigée puis essai réel réussi. Aucune
+  valeur n’a été inventée pour compenser ce refus initial.
+- D’autres lectures exploratoires ont échoué : page Skinnytaste sans données
+  attendues ; Allrecipes/EatingWell avec restriction HTTP 402. Aucun contournement,
+  aucune compatibilité générale de ces sites déclarée. Allrecipes/EatingWell
+  ne sont pas dans la liste prise en charge par le code livré.
+- `scripts/web-nutrition-browser-check.mjs` dans Chromium, source HTML simulée :
+  ouverture de recherche explicite, URL locale refusée avant tout appel sortant,
+  lecture, sélection, 1,5 portion × 348 kcal = 522 kcal, g/ml désactivés,
+  source et export conservés après rechargement, portion absente refusée.
+  À 360 et 1 365 pixels : aucun débordement horizontal ni erreur JavaScript.
+- Premier passage de ce script : attente d’un champ URL désactivé après rechargement,
+  car le script n’avait pas rechoisi la source web. Scénario corrigé puis réussi.
+- Régressions réussies : scripts calories-browser-check.mjs,
+  nutrition-browser-check.mjs, usda-browser-check.mjs et photo-browser-check.mjs.
+  Ces tests concernent l’application Node, pas le Site publié ; modèles/OFF/HTML
+  sont simulés, USDA utilise une copie du catalogue public réel.
+
+La lecture web n’est pas une recherche serveur automatique ; pas d’OCR, de mesure
+nutritionnelle indépendante, de lecture universelle de sites ou de conversion
+poids/volume. L’aperçu publié reste à sa version 1 autorisée. Pas de déploiement
+du serveur Node/llama.cpp ou de nouvelle image Docker ; pas de test Android physique.
+
+Clôture : analyse syntaxique et contrôle du diff réussis ; liens internes de
+18 documents vérifiés, aucun chemin absent. Les informations de publication
+référencent des identifiants et URL non secrets ; aucun identifiant d’écriture
+Sites, journal personnel, archive de déploiement ou capture ajouté à GitHub.

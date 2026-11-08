@@ -78,8 +78,8 @@ La [photo assistée](FOOD_PHOTO.md) propose désormais un nom, corrigible avant
 la recherche. Elle ne déduit ni calories ni portions.
 
 À construire ensuite : Ciqual, imports plus larges dimensionnés, lecture
-par caméra de codes-barres, OCR d’étiquette, recherche
-web générale sourcée. Voir [recherche](research/NUTRITION_RESEARCH.md) et
+par caméra de codes-barres et OCR d’étiquette. La [lecture web sourcée](WEB_NUTRITION.md)
+prend maintenant en charge certaines recettes ; ce n’est pas une recherche web automatisée. Voir [recherche](research/NUTRITION_RESEARCH.md) et
 [plan](research/NUTRITION_DATA_PLAN.md).
 
 ## Contrats officiels consultés
