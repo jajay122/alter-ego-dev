@@ -10,6 +10,7 @@ module du portail ; catalogue nutritionnel, photo et recherche web font désorma
 l’objet d’une recherche et d’un plan de construction. Le premier connecteur
 Open Food Facts, son cache local et les portions sourcées sont implémentés. La
 photo assistée propose un nom à vérifier, sans estimation calorique automatique.
+Un catalogue USDA local complète OFF, avec import contrôlé et provenance figée.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement

@@ -7,6 +7,7 @@
   facultatif et export ; persistance et contrôle des versions.
 - Recherche Open Food Facts par nom/code-barres saisi, cache SQLite/FTS5 et portions
   confirmées avec provenance figée.
+- Catalogue USDA local : Foundation et SR Legacy, 8 217 fiches dans l’import vérifié.
 - Photo alimentaire assistée, corrigible avant recherche explicite et portion confirmée.
 - Assistant local facultatif texte/photo/Wikipédia ; aucune API d’IA distante.
 - Dix responsabilités de collaboration et règles Git ; pas de production déployée.
@@ -16,12 +17,14 @@
 La [recherche](research/NUTRITION_RESEARCH.md) et le
 [plan technique](research/NUTRITION_DATA_PLAN.md) explicitent sources et limites.
 Le connecteur OFF est branché ; le cache ne contient que les produits consultés,
-pas le catalogue mondial complet. La photo assistée est branchée ; Ciqual, USDA,
-OCR d’étiquette et web général restent à construire.
+pas le catalogue mondial complet. USDA dispose d’un catalogue importé séparé.
+La photo assistée est branchée ; Ciqual, OCR d’étiquette et web général restent
+à construire.
 
 | Priorité | Travail | Condition de fin |
 | --- | --- | --- |
-| P0 | Catalogue sourcé, index français, cache et contrats OFF/Ciqual/USDA. | Licences/accès revérifiés ; unités, absences, provenance et versions testées ; disque mesuré. |
+| Livré (USDA) | Catalogue local Foundation + SR Legacy. | Import vérifié, source/version conservées, aucune recherche externe, unités en g uniquement. |
+| P0 | Connecter Ciqual quand son accès officiel est rétabli. | Export/licence vérifiés, index français et import sans perte testés. |
 | Livré (OFF) | Recherche texte et code-barres saisi, portions en g/ml. | Calcul serveur et instantané vérifiés ; scanner caméra non livré. |
 | Prototype livré | Photo assistée. | Parcours et essais ponctuels vérifiés ; benchmark alimentaire à réaliser, précision non établie. |
 | P1 | OCR d’étiquette local. | Valeurs et unités sourcées puis confirmées ; aucun ajout automatique. |

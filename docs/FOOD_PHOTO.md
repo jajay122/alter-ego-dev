@@ -24,7 +24,8 @@ Si rien n’est proposé, si le moteur est arrêté ou si le résultat est faux,
 utiliser directement la recherche texte, le cache ou la saisie manuelle.
 Open Food Facts couvre surtout des produits emballés : une reconnaissance de
 « banana » ne garantit pas de retrouver immédiatement une fiche générique adaptée.
-Ciqual reste une prochaine intégration, pas une source disponible ici.
+Le choix [USDA local](USDA.md), après import, permet de retrouver des aliments
+courants avec leur nom anglais. Ciqual reste une prochaine intégration.
 
 ## Traitement et confidentialité
 
@@ -83,5 +84,5 @@ non exploitable, rejetée après correction du filtre. Deux images ne sont pas u
 benchmark de reconnaissance ni une validation clinique. Pas de taux de précision
 annoncé. Voir [VALIDATION.md](VALIDATION.md).
 
-À poursuivre : protocole de benchmark sur plats variés, Ciqual/USDA pour la
-couverture générique, OCR d’étiquette et recherche web de valeurs sourcées.
+À poursuivre : protocole de benchmark sur plats variés, Ciqual pour compléter
+USDA, OCR d’étiquette et recherche web de valeurs sourcées.

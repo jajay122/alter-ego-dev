@@ -19,7 +19,7 @@ const foodPhoto = createFoodPhoto({ request, onCandidate(candidate) {
   $('food-name').value = ''; $('food-kcal').value = '';
   if (draft) draft.preserveNutrition = false;
   $('food-query').value = candidate;
-  $('search-status').textContent = 'Vérifiez ou corrigez ce nom, puis appuyez sur Rechercher. Aucun aliment n’a été ajouté.';
+  $('search-status').textContent = 'Vérifiez ou corrigez ce nom, puis choisissez la source : USDA pour les aliments courants en anglais, OFF pour les produits emballés. Appuyez sur Rechercher. Aucun aliment n’a été ajouté.';
   $('food-query').focus();
 } });
 
@@ -70,6 +70,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
 function setBusy(value) {
   busy = value;
   foodPhoto.setLocked(value);
+  $('food-source').disabled = value;
   for (const id of ['day', 'previous-day', 'next-day', 'today', 'add-food', 'first-food', 'set-goal', 'reload', 'export', 'save-food', 'save-goal', 'confirm-delete', 'close-food', 'cancel-food', 'close-goal', 'cancel-goal', 'cancel-delete']) $(id).disabled = value;
   document.querySelectorAll('#food-form input, #food-form select, #goal-form input, .row-actions button').forEach(el => { el.disabled = value; });
 }
@@ -99,7 +100,7 @@ function render(data) {
     if (entry.nutrition) {
       const source = document.createElement('a');
       source.className = 'entry-source'; source.href = entry.nutrition.sourceUrl; source.target = '_blank'; source.rel = 'noopener noreferrer';
-      source.textContent = `${number(entry.nutrition.quantity)} ${entry.nutrition.unit} · Open Food Facts (ODbL)`;
+      source.textContent = `${number(entry.nutrition.quantity)} ${entry.nutrition.unit} · ${entry.nutrition.provider === 'usda' ? `USDA ${entry.nutrition.dataset} ${entry.nutrition.release} (CC0)` : 'Open Food Facts (ODbL)'}`;
       info.append(source);
     }
     const energy = document.createElement('span'); energy.className = 'food-energy'; energy.textContent = number(entry.kcal);
@@ -176,7 +177,7 @@ $('food-form').addEventListener('submit', async event => {
   if (busy || !draft) return;
   const body = { name: $('food-name').value, kcal: Number($('food-kcal').value), meal: $('food-meal').value, date: draft.date,
     ...(draft.isNew ? { operationId: draft.id } : { version: draft.version, preserveNutrition: draft.preserveNutrition }),
-    ...(selectedProduct ? { catalogPortion: { code: selectedProduct.code, retrievedAt: selectedProduct.retrievedAt,
+    ...(selectedProduct ? { catalogPortion: { provider: selectedProduct.provider, revision: selectedProduct.revision, code: selectedProduct.code, retrievedAt: selectedProduct.retrievedAt,
       quantity: Number($('portion-quantity').value), unit: $('portion-unit').value, basisConfirmed: true } } : {}) };
   if (selectedProduct && (!['g', 'ml'].includes($('portion-unit').value) || !$('portion-quantity').value)) { $('food-error').textContent = 'Confirmez la quantité et l’unité de l’étiquette.'; return; }
   setBusy(true); $('food-error').textContent = '';
@@ -260,6 +261,7 @@ function resetSearch({ keepPhoto = false } = {}) {
   $('food-query').value = '';
   $('portion-quantity').value = '';
   $('portion-unit').value = '';
+  $('portion-unit').querySelector('[value=ml]').disabled = false;
   $('portion-quantity').required = false;
   $('portion-unit').required = false;
   $('food-name').readOnly = false;
@@ -291,25 +293,28 @@ $('search-form').addEventListener('submit', async event => {
   $('search-status').textContent = 'Recherche en cours…';
   $('search-results').replaceChildren();
   try {
-    const data = await request(`/api/nutrition/search?q=${encodeURIComponent($('food-query').value)}${$('local-search').checked ? '&local=1' : ''}`, { signal: searchController.signal });
+    const data = await request(`/api/nutrition/search?source=${encodeURIComponent($('food-source').value)}&q=${encodeURIComponent($('food-query').value)}${$('local-search').checked ? '&local=1' : ''}`, { signal: searchController.signal });
     if (id !== searchId || !$('food-dialog').open) return;
-    $('search-status').textContent = data.warning || (data.products.length ? `${data.products.length} produit(s) trouvé(s)${data.mode === 'cache' ? ' dans le cache' : ''}. Choisissez votre produit.` : 'Aucun produit trouvé. Essayez un autre nom ou la saisie manuelle.');
+    const summary = data.products.length ? `${data.products.length} résultat(s)${data.catalog ? ` parmi ${number(data.catalog.count)} fiches` : ''}${data.mode === 'cache' ? ' dans le cache' : ''}. Choisissez votre produit.` : 'Aucun produit trouvé. Essayez un autre nom ou la saisie manuelle.';
+    $('search-status').textContent = [data.warning, summary].filter(Boolean).join(' ');
     for (const product of data.products) {
       const li = document.createElement('li');
       const title = document.createElement('strong'); title.textContent = product.name;
       const detail = document.createElement('p');
-      detail.textContent = `${product.brand || 'Marque non renseignée'} · ${product.code} · ${product.kcalPer100 === null ? 'Énergie non renseignée' : `${number(product.kcalPer100)} kcal / 100 g ou 100 ml`} · Consulté le ${new Date(product.retrievedAt).toLocaleDateString('fr-FR')}`;
+      detail.textContent = `${product.provider === 'usda' ? `USDA ${product.dataset} ${product.release} · Noms en anglais` : product.brand || 'Marque non renseignée'} · ${product.code} · ${product.kcalPer100 === null ? 'Énergie non renseignée' : `${number(product.kcalPer100)} kcal / ${product.provider === 'usda' ? '100 g' : '100 g ou 100 ml'}`} · Consulté le ${new Date(product.retrievedAt).toLocaleDateString('fr-FR')}`;
       const choose = document.createElement('button'); choose.type = 'button'; choose.className = 'secondary'; choose.textContent = 'Choisir';
       choose.setAttribute('aria-label', `Choisir ${product.name}`); choose.disabled = product.kcalPer100 === null;
       choose.addEventListener('click', () => {
         if (busy) return;
         selectedProduct = product;
         $('selected-product').hidden = false;
-        $('product-detail').textContent = `${product.name} · ${number(product.kcalPer100)} kcal pour 100 g ou 100 ml${product.energyMethod === 'converted-kj' ? ' (conversion depuis les kJ)' : ''}. Vérifiez l’étiquette.`;
+        $('product-detail').textContent = `${product.name} · ${number(product.kcalPer100)} kcal pour ${product.provider === 'usda' ? '100 g' : '100 g ou 100 ml'}${product.energyMethod === 'converted-kj' ? ' (conversion depuis les kJ)' : ''}. ${product.provider === 'usda' ? `USDA ${product.dataset} ${product.release} : vérifiez la description et l’état cru/cuit.` : 'Vérifiez l’étiquette.'}`;
         $('product-source').href = product.sourceUrl;
-        $('food-name').value = product.name; $('food-name').readOnly = true;
+        $('food-name').value = product.name.slice(0, 120); $('food-name').readOnly = true;
         $('food-kcal').value = ''; $('food-kcal').readOnly = true;
         $('portion-quantity').value = ''; $('portion-unit').value = '';
+        $('portion-unit').querySelector('[value=ml]').disabled = product.provider === 'usda';
+        $('portion-basis-help').textContent = product.provider === 'usda' ? 'USDA : valeurs pour 100 g, quantité en grammes uniquement. Pas de conversion implicite depuis ml.' : 'Confirmez g ou ml d’après l’étiquette. Aucune conversion entre poids et volume.';
         $('portion-quantity').required = true; $('portion-unit').required = true;
         $('search-results').replaceChildren(); $('search-status').textContent = 'Produit choisi. Confirmez maintenant la quantité et l’unité.';
         $('portion-quantity').focus();
@@ -318,4 +323,20 @@ $('search-form').addEventListener('submit', async event => {
     }
   } catch (error) { if (error.name !== 'AbortError' && id === searchId) $('search-status').textContent = error.message; }
   finally { if (id === searchId) $('search-food').disabled = false; }
+});
+
+$('food-source').addEventListener('change', () => {
+  const query = $('food-query').value;
+  const selected = Boolean(selectedProduct);
+  resetSearch({ keepPhoto: true });
+  $('food-query').value = query;
+  if (selected) { $('food-name').value = ''; $('food-kcal').value = ''; }
+  searchController?.abort(); searchId++;
+  $('search-food').disabled = false;
+  $('search-results').replaceChildren(); $('search-status').textContent = '';
+  const usda = $('food-source').value === 'usda';
+  $('local-search-choice').hidden = usda;
+  $('food-query-label').textContent = usda ? 'Nom anglais ou identifiant USDA' : 'Nom ou code-barres';
+  $('food-query').placeholder = usda ? 'Ex. : banana, rice cooked, chicken' : 'Ex. : yaourt nature ou code-barres';
+  $('source-help').textContent = usda ? 'Catalogue local importé, noms en anglais. Vérifiez cru/cuit et la version. Aucun appel Internet.' : 'Recherche en ligne et cache des produits consultés.';
 });

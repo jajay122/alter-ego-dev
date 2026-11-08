@@ -32,7 +32,7 @@ n’exécute aucun outil, shell, fichier ou action externe. Il produit du texte.
 | GET /calories | Interface de verrouillage du suivi. | Journal lu seulement après authentification. |
 | GET /assistant | Interface de l’assistant existant. | Session commune pour les opérations privées. |
 | POST /api/nutrition/photo | Propositions de noms par vision locale. | Session, origine, validation image, verrou et quota partagés avec l’assistant. |
-| GET /api/nutrition/search?q=... | Catalogue Open Food Facts et cache local. | Session obligatoire, entrée bornée, quotas persistants. |
+| GET /api/nutrition/search?source=...&q=... | OFF en ligne/cache, ou USDA local en lecture seule. | Session obligatoire, entrée bornée, quotas persistants. |
 | GET /api/session | État de session sans appel au modèle. | Aucun contenu personnel. |
 | GET /api/calories/day et /api/calories/export | Lecture ou export du journal. | Session obligatoire. |
 | POST /api/calories/entries, PUT et DELETE /api/calories/entries/:id | Création, correction et suppression. | Session, origine, validation et version d’entrée. |
@@ -82,8 +82,8 @@ les sauvegardes du volume, sans constituer un système de restauration intégré
 Catalogue public/cache distinct du journal privé, fiches versionnées et sourcées,
 recherche par photo avec confirmation des portions, collecte web contrôlée :
 [plan proposé](research/NUTRITION_DATA_PLAN.md). Le connecteur OFF et un cache SQLite avec index FTS5 sont désormais livrés,
-sans migration du journal. Voir [NUTRITION.md](NUTRITION.md). La [photo assistée](FOOD_PHOTO.md) est aussi implémentée. Ciqual, USDA, OCR
-d’étiquette et collecte web générale restent proposés.
+sans migration du journal. Voir [NUTRITION.md](NUTRITION.md). La [photo assistée](FOOD_PHOTO.md) et le [catalogue USDA local](USDA.md) sont
+implémentés. Ciqual, OCR d’étiquette et collecte web générale restent proposés.
 
 ## Cache alimentaire
 
@@ -101,3 +101,14 @@ public/food-photo.js gère le JPEG réduit, l’aperçu temporaire, l’annulati
 résultats corrigibles. lib/food-photo.mjs fournit la consigne serveur et le filtre
 de noms. L’endpoint réutilise askLocalModel et les protections de l’assistant.
 Aucune image ni proposition n’est ajoutée automatiquement au journal ou à OFF.
+
+## Référence USDA séparée
+
+lib/usda-import.mjs et scripts/import-usda.mjs construisent explicitement
+.data/usda.sqlite depuis deux exports officiels figés et vérifiés par SHA-256,
+ZIP/CRC et schéma, puis remplacent atomiquement ce fichier. lib/usda.mjs ne
+l’ouvre qu’en lecture seule. Pas de migration de nutrition.sqlite ou calories.json.
+Les recherches sont locales avec FTS5 ; les instantanés précisent fournisseur,
+version, archive et méthode énergétique. Une ancienne version limitée aux
+instantanés OFF peut refuser un journal contenant désormais USDA : conserver
+une sauvegarde coordonnée du journal et du code avant un retour arrière.

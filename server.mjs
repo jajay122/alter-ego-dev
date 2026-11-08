@@ -5,6 +5,7 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { AppError, askLocalModel, modelHealth, validateInput } from './lib/assistant.mjs';
 import { createCalorieStore } from './lib/calories.mjs';
 import { createNutritionCatalog } from './lib/nutrition.mjs';
+import { createUsdaCatalog } from './lib/usda.mjs';
 import { validateFoodPhoto, foodCandidates } from './lib/food-photo.mjs';
 
 const staticFiles = new Map([
@@ -59,6 +60,7 @@ function readJson(req, maxBytes) {
 export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
   const calorieStore = createCalorieStore(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
   const nutritionCatalog = createNutritionCatalog(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)), { fetchImpl });
+  const usdaCatalog = createUsdaCatalog(config.dataDir || fileURLToPath(new URL('./.data/', import.meta.url)));
   const sessions = new Map();
   const loginAttempts = new Map();
   const calls = [];
@@ -112,6 +114,9 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
       }
       if (req.method === 'GET' && path === '/api/nutrition/search') {
         if (!session) throw new AppError(401, 'UNAUTHORIZED', 'Connecte-toi pour rechercher un aliment.');
+        const source = url.searchParams.get('source') || 'openfoodfacts';
+        if (!['openfoodfacts', 'usda'].includes(source)) throw new AppError(400, 'INVALID_PROVIDER', 'Choisis une source alimentaire disponible.');
+        if (source === 'usda') return json(200, usdaCatalog.search(url.searchParams.get('q')));
         return json(200, await nutritionCatalog.search(url.searchParams.get('q'), { localOnly: url.searchParams.get('local') === '1' }));
       }
       const entryPath = /^\/api\/calories\/entries\/([a-f0-9-]{36})$/i.exec(path);
@@ -155,7 +160,10 @@ export function createApp({ config = readConfig(), fetchImpl = fetch } = {}) {
         const body = await readJson(req, 4096);
         if (!body || typeof body !== 'object' || Array.isArray(body)) throw new AppError(400, 'INVALID_ENTRY', 'Le format de cette entrée est invalide.');
         if ('nutrition' in body) throw new AppError(400, 'INVALID_NUTRITION', 'Choisis une fiche dans la recherche ou utilise la saisie manuelle.');
-        if (body.catalogPortion && (path === '/api/calories/entries' || (entryPath && req.method === 'PUT'))) Object.assign(body, await nutritionCatalog.portion(body.catalogPortion));
+        if (body.catalogPortion && (path === '/api/calories/entries' || (entryPath && req.method === 'PUT'))) {
+          if (body.catalogPortion.provider && !['openfoodfacts', 'usda'].includes(body.catalogPortion.provider)) throw new AppError(400, 'INVALID_PROVIDER', 'Source alimentaire invalide.');
+          Object.assign(body, body.catalogPortion.provider === 'usda' ? usdaCatalog.portion(body.catalogPortion) : await nutritionCatalog.portion(body.catalogPortion));
+        }
         if (path === '/api/calories/entries') return json(201, await calorieStore.add(body));
         if (path === '/api/calories/goal') return json(200, await calorieStore.setGoal(body.goal));
         if (req.method === 'PUT') return json(200, await calorieStore.update(entryPath[1], body));
