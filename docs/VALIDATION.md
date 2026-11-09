@@ -309,3 +309,38 @@ Clôture : analyse syntaxique et contrôle du diff réussis ; liens internes de
 18 documents vérifiés, aucun chemin absent. Les informations de publication
 référencent des identifiants et URL non secrets ; aucun identifiant d’écriture
 Sites, journal personnel, archive de déploiement ou capture ajouté à GitHub.
+
+## 9 novembre 2026 — Version hébergée 2 préparée
+
+- Cinq agents de développement ont travaillé sur des fichiers attribués : backend,
+  interface, calories, modèles navigateur et revue. Corrections de revue intégrées.
+- `npm run check` : réussi. `npm test` : **80 réussis, 0 échec, 0 ignoré**.
+  Les nouveaux contrôles couvrent isolation propriétaire, origine des écritures,
+  versions concurrentes, import idempotent et atomique, provenance nutritionnelle,
+  Atelier et protocole des modèles avec moteur simulé.
+- `ALTER_EGO_ESBUILD_MODULE=/tmp/alter-ego-build/node_modules/esbuild/lib/main.js node scripts/build-hosted.mjs` :
+  compilation ESM réussie. `node scripts/check-hosted-build.mjs` : réussi sur
+  Worker compilé et migrations SQLite locales, cinq routes, modules, accès privé,
+  8 217 fiches USDA, portion réelle et isolation des projets. Même contrôle réussi
+  sur l’archive construite dans la source Sites.
+- Inférence réelle CPU du profil SmolLM2 135M : chargement et génération réussis
+  techniquement, **réponse française incorrecte et hors sujet**. Preuve détaillée
+  dans [BROWSER_AI.md](BROWSER_AI.md). Les outils de recherche/calcul sont donc
+  accessibles sans modèle ; le chat léger est explicitement expérimental.
+- Qwen multilingue et vision : artefacts et interfaces vérifiés, inférence réelle
+  non exécutée. Les tests du protocole ne prouvent pas la qualité des réponses.
+- Aucun contrôle du rendu Sites ou Android physique réalisé. L’outil de bureau
+  autorisé est absent dans l’environnement Sites ; aucun navigateur de remplacement
+  n’a été lancé par le pilote. Un essai isolé de l’agent calories avec API simulée
+  a été interrompu après clarification de cette restriction ; il n’est pas compté
+  comme preuve du Site ou du téléphone.
+- Version 2 sauvegardée par Sites, source poussée, accès propriétaire seul vérifié.
+  D1 hébergé et application effective des migrations restent à vérifier après
+  autorisation et déploiement. Aucune approbation de la version 1 n’est réutilisée.
+- Le journal v1 reste dans le navigateur ; son import doit être déclenché par
+  l’utilisateur, sans effacer la copie locale. Aucun journal, poids de modèle ou
+  identifiant d’écriture ne fait partie des fichiers proposés à GitHub.
+
+Clôture du diff : 39 fichiers proposés, aucune empreinte de clé privée ou jeton
+dans les nouveaux fichiers ; 18 documents contrôlés, aucun lien local absent.
+Deux lignes blanches finales retirées sans changement de comportement.

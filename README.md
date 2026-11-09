@@ -4,6 +4,15 @@ L’accueil regroupe vos applications : suivi calories sur /calories et petit
 assistant local sur /assistant. Le suivi est un module du SaaS, pas le SaaS entier.
 Le journal permet de noter les portions et de retrouver ses entrées après redémarrage.
 
+## Nouvelle version complète préparée
+
+La [version hébergée 2](docs/HOSTED_V2.md) ajoute un serveur privé D1 au même lien,
+une interface revue, favoris/copies/semaine, migration du journal de l’aperçu,
+IA texte/photo dans le navigateur et Atelier de dix rôles. Elle est préparée et
+vérifiée ; sa publication attend la validation humaine de la version exacte.
+Le modèle léger reste expérimental, notamment en français ; Wikipédia et calcul
+fonctionnent sans modèle. Voir [les modèles et leurs limites](docs/BROWSER_AI.md).
+
 ## Voir sur téléphone
 
 [Aperçu privé du portail](https://alter-ego-apercu-mobile-20261108.jay789456.chatgpt.site) ·

@@ -9,3 +9,8 @@ artifacts/
 .runtime/
 .data/*
 !.data/.gitkeep
+
+# Hosted build artefacts (public catalogue is rebuilt, never the private journal).
+.build/
+.sites-runtime/
+.wrangler/

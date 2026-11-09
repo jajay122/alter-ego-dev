@@ -235,6 +235,28 @@ techniques validées. Une décision documentée ne prouve pas sa mise en œuvre.
 - **Preuves :** [fonctionnement](WEB_NUTRITION.md), [validation](VALIDATION.md),
   essai réel Good Food 348 kcal par portion et tests synthétiques des refus.
 
+## ADR-015 — Passer du Site statique à un espace privé complet
+
+- **Date :** 2026-11-09.
+- **Statut :** implémenté et testé localement, version prête à soumettre.
+- **Décision :** même projet/domaine Sites et audience propriétaire seul ; Worker
+  ESM et D1 pour les fonctions côté serveur, modèles libres dans Web Worker pour
+  l’IA. Pas d’API IA payante ni serveur llama.cpp supposé accessible depuis le lien.
+- **Interface :** refonte unifiée Nutrition/Assistant/Atelier, navigation Android,
+  migration explicite du journal v1 sans suppression de sa copie locale.
+- **Agents :** cinq agents spécialisés de développement utilisés avec ownership
+  des fichiers. Les dix rôles de l’Atelier préparent des propositions via modèle
+  local ; aucun daemon ou tâche continuant après fermeture n’est prétendu.
+- **IA :** léger expérimental, option multilingue WebGPU, vision SmolVLM après
+  téléchargement séparé. Le test CPU léger réussit techniquement mais échoue en
+  qualité française ; outils calcul/sources mis en avant, aucune supériorité garantie.
+- **Données :** owner scope partout, UUID idempotents, imports merge par lots100,
+  conflits/révisions, triggers atomiques et migrations schema-only immuables.
+- **Conséquences :** D1 et Android réels à valider après publication autorisée ;
+  pas de promesse de disponibilité d’un processus IA permanent côté serveur.
+- **Preuves :** [architecture et procédure](HOSTED_V2.md),
+  [modèles](BROWSER_AI.md), [validation](VALIDATION.md).
+
 ## Modèle pour les prochaines décisions
 
 ```markdown

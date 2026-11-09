@@ -41,3 +41,11 @@ Choisir une machine et dimensionner CPU/RAM/disque, prévoir sauvegarde et HTTPS
 configurer les secrets hors Git, puis soumettre version et cible exactes à
 validation humaine avant production. Aucun hébergement permanent gratuit ou
 service externe illimité n’est garanti. Voir [VALIDATION.md](VALIDATION.md).
+
+## Version 2 — demandée le 9 novembre
+
+Préparée : interface unifiée Android, D1, favoris/copie/semaine, import v1,
+sources OFF/web accessibles dans le Worker, Assistant avec outils fiables et
+modèles navigateur optionnels, Atelier de dix rôles. Voir [HOSTED_V2.md](HOSTED_V2.md).
+Publication sur le même lien après validation humaine ; essais réels Android
+nécessaires pour qualifier mémoire, performance et qualité des modèles.

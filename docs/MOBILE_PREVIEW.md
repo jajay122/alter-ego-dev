@@ -46,3 +46,22 @@ Le journal existant, les modèles, les clés et les données privées n’ont pa
 copiés dans le Site. L’archive ne contient que manifeste, fichiers publics et
 catalogue USDA CC0. Les identifiants d’écriture Sites ne sont pas stockés dans
 le dépôt. Aucun hébergement permanent du moteur Node/llama.cpp n’est établi.
+
+## Version 2 préparée le 9 novembre 2026
+
+La version 1 ci-dessus reste la version publiée tant que la nouvelle autorisation
+n’est pas obtenue. La version 2 sauvegardée réunit portail, calories, assistant et
+Atelier sur le même domaine ; voir [HOSTED_V2.md](HOSTED_V2.md) pour son fonctionnement
+et [VALIDATION.md](VALIDATION.md) pour les limites des contrôles.
+
+- Source Sites : `8ac7e5cdb207d892a0725d69917b32ee63fde65e`.
+- Version sauvegardée : `appgprj_6af02c9979648191a6559b395dc578df~appgver_239c13eab13c8191b076a3126c6dad39`.
+- SHA-256 de l’archive : `98f78facea5e49ee7d9c32f9a54729f4472c9755b292a183a4b266580e51a610`.
+- Cible : même URL privée, même propriétaire seul ; nouvelle base D1 pour les données.
+- État : sauvegardée, **publication en attente d’approbation humaine de cette version**.
+
+Le journal v1 n’est pas transféré automatiquement : une commande d’import explicite
+lit sa copie locale et conserve celle-ci. Les modèles gratuits se téléchargent à
+la demande sur l’appareil ; leur fonctionnement Android et la vision restent à
+valider. L’Atelier traite les rôles successivement tant que l’onglet reste actif ;
+il ne garantit pas une exécution après fermeture ou suspension du téléphone.

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f3eb">
+  <meta name="description" content="ALTER EGO : votre espace personnel pour le suivi nutritionnel, l’assistant et la création d’applications.">
+  <title>ALTER EGO — Votre espace personnel</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/v2/app.css">
+  <script type="module" src="/v2/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" data-nav aria-label="ALTER EGO, accueil"><span class="brand-mark" aria-hidden="true">ae<span>↗</span></span><span>ALTER EGO<small>MON ESPACE PERSONNEL</small></span></a>
+      <nav class="desktop-nav" aria-label="Navigation principale"></nav>
+      <div class="sidebar-footer"><span class="small-label">UN ESPACE. VOS POSSIBILITÉS.</span><p>Le quotidien, avec un peu plus d’élan.</p></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <a class="mobile-brand" href="/" data-nav aria-label="ALTER EGO, accueil">ae<span aria-hidden="true">↗</span></a>
+        <span class="location-label" id="location-label">Vue d’ensemble</span>
+        <div class="topbar-actions"><span class="session-indicator" id="session-state" role="status">Connexion…</span><a class="button button-primary create-link" href="/atelier" data-nav><span aria-hidden="true">＋</span> Créer une app</a></div>
+      </header>
+      <main id="main" tabindex="-1"></main>
+      <footer class="workspace-footer"><span>ALTER EGO</span><span>Votre espace, à votre rythme.</span></footer>
+    </div>
+  </div>
+  <nav class="mobile-nav" aria-label="Navigation mobile"></nav>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
