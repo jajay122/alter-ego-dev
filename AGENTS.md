@@ -14,6 +14,10 @@ Un catalogue USDA local complète OFF, avec import contrôlé et provenance fig�
 La lecture web de recettes conserve source et portion explicites. L’aperçu mobile
 Sites version 1 a été publié après autorisation du propriétaire ; ses données
 restent dans le navigateur, séparées du serveur et du modèle locaux.
+Le propriétaire demande le 9 novembre une version complète au même lien, une
+refonte visuelle, des agents et une IA améliorée. La version hébergée 2 prépare
+Worker/D1 et modèles navigateur gratuits ; les agents de développement sont
+autorisés pour cette tâche, avec fichiers attribués pour éviter les collisions.
 La validation humaine avant tout déploiement en production reste obligatoire.
 
 Ces dix rôles représentent des responsabilités, pas dix agents automatiquement

@@ -122,3 +122,10 @@ humaine de sa version 1. Son journal est stocké dans le navigateur ; il ne dép
 pas le serveur Node ni llama.cpp. La [lecture web nutritionnelle](WEB_NUTRITION.md)
 est implémentée dans Node avec un fichier web-nutrition.sqlite distinct et des
 instantanés par portion ; elle ne fait pas partie de cet aperçu statique publié.
+
+## Version complète en préparation au 9 novembre
+
+La cible courante est [HOSTED_V2.md](HOSTED_V2.md) : même domaine Sites privé,
+Worker ESM avec identité ChatGPT, D1 par propriétaire, modèles gratuits dans
+le navigateur, reprise explicite du journal local et Atelier. Le serveur Node
+décrit plus haut reste le prototype de référence ; ce n’est pas le backend du Site v2.

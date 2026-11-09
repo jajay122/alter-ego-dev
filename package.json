@@ -1,6 +1,6 @@
 {
   "name": "alter-ego-assistant",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -10,10 +10,17 @@
     "start": "node --env-file-if-exists=.env.local server.mjs",
     "dev": "node --watch --env-file-if-exists=.env.local server.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs && node --check public/portal.js && node --check lib/nutrition.mjs && node --check scripts/nutrition-browser-check.mjs && node --check lib/food-photo.mjs && node --check public/food-photo.js && node --check scripts/photo-browser-check.mjs && node --check lib/usda.mjs && node --check lib/usda-import.mjs && node --check scripts/import-usda.mjs && node --check scripts/usda-browser-check.mjs && node --check lib/web-nutrition-source.mjs && node --check lib/web-nutrition.mjs && node --check scripts/web-nutrition-browser-check.mjs",
+    "check": "node --check server.mjs && node --check lib/assistant.mjs && node --check public/app.js && node --check scripts/install-model.mjs && node --check scripts/model-service.mjs && node --check lib/calories.mjs && node --check public/calories.js && node --check scripts/calories-browser-check.mjs && node --check public/portal.js && node --check lib/nutrition.mjs && node --check scripts/nutrition-browser-check.mjs && node --check lib/food-photo.mjs && node --check public/food-photo.js && node --check scripts/photo-browser-check.mjs && node --check lib/usda.mjs && node --check lib/usda-import.mjs && node --check scripts/import-usda.mjs && node --check scripts/usda-browser-check.mjs && node --check lib/web-nutrition-source.mjs && node --check lib/web-nutrition.mjs && node --check scripts/web-nutrition-browser-check.mjs && node --check hosted/worker.mjs && node --check hosted/workshop.mjs && node --check public/v2/app.js && node --check public/v2/calories.js && node --check public/v2/ai.js && node --check public/v2/model-client.js && node --check public/v2/model-worker.js && node --check public/v2/workshop.js && node --check scripts/build-hosted.mjs",
     "model:install": "node scripts/install-model.mjs",
     "model:start": "node scripts/model-service.mjs start",
     "model:stop": "node scripts/model-service.mjs stop",
-    "nutrition:import:usda": "node --env-file-if-exists=.env.local scripts/import-usda.mjs"
+    "nutrition:import:usda": "node --env-file-if-exists=.env.local scripts/import-usda.mjs",
+    "build:hosted": "node scripts/build-hosted.mjs",
+    "db:generate:hosted": "drizzle-kit generate --dialect sqlite --schema hosted/drizzle-schema.ts --out hosted/migrations"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "drizzle-kit": "0.31.11",
+    "drizzle-orm": "0.45.4"
   }
 }
